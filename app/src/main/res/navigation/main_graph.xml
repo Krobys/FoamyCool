@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/navigation_search_beer">
+    <fragment
+        android:id="@+id/navigation_search_beer"
+        android:name="com.akrivonos.beerdictionaryapplication.fragments.SearchBeerNameFragment"
+        android:label="fragment_search_beer_name"
+        tools:layout="@layout/fragment_search_beer_name" >
+        <action
+            android:id="@+id/action_searchBeerNameFragment2_to_searchGeoBreweryFragment2"
+            app:destination="@id/navigation_search_brewery" />
+        <action
+            android:id="@+id/action_searchBeerNameFragment2_to_detailedInfoBeerFragment2"
+            app:destination="@id/detailedInfoBeerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_search_brewery"
+        android:name="com.akrivonos.beerdictionaryapplication.fragments.SearchGeoBreweryFragment"
+        android:label="fragment_search_geo_brewery"
+        tools:layout="@layout/fragment_search_geo_brewery" >
+        <action
+            android:id="@+id/action_searchGeoBreweryFragment2_to_searchBeerNameFragment2"
+            app:destination="@id/navigation_search_beer" />
+        <action
+            android:id="@+id/action_searchGeoBreweryFragment2_to_detailedInfoBreweryFragment2"
+            app:destination="@id/detailedInfoBreweryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailedInfoBreweryFragment"
+        android:name="com.akrivonos.beerdictionaryapplication.fragments.DetailedInfoBreweryFragment"
+        android:label="fragment_detailed_info_brewery"
+        tools:layout="@layout/fragment_detailed_info_brewery" />
+    <fragment
+        android:id="@+id/detailedInfoBeerFragment"
+        android:name="com.akrivonos.beerdictionaryapplication.fragments.DetailedInfoBeerFragment"
+        android:label="fragment_detailed_info_beer"
+        tools:layout="@layout/fragment_detailed_info_beer" />
+</navigation>
