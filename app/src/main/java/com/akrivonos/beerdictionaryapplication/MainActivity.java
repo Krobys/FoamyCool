@@ -2,6 +2,7 @@ package com.akrivonos.beerdictionaryapplication;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBreweryListener;
@@ -17,9 +19,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements MoveToDetailsBeerListener, MoveToDetailsBreweryListener, MoveBackListener {
+public class MainActivity extends AppCompatActivity implements MoveToDetailsBeerListener, MoveToDetailsBreweryListener, MoveBackListener, BottomNavigationHideListener {
     public static final String DETAILED_INFO_BEER = "detailed_info_beer";
     private NavController navController;
+    private BottomNavigationView navView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -41,12 +44,11 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
@@ -61,5 +63,15 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     @Override
     public void moveBack() {
         navController.popBackStack();
+    }
+
+    @Override
+    public void hideBottomNavMenu() {
+        navView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showBottomNavMenu() {
+        navView.setVisibility(View.VISIBLE);
     }
 }

@@ -67,6 +67,12 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
     }
 
     @Override
+    public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
+        //TODO добавить постраничную подгрузку
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
     public int getItemCount() {
         return beerTypesList.size();
     }

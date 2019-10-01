@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
+import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.akrivonos.beerdictionaryapplication.models.BeerModel;
@@ -54,6 +55,7 @@ public class SearchBeerNameFragment extends Fragment {
     private ProgressBar progressBar;
     private Disposable searchViewDisposable;
     private LinearLayout emptyMessage;
+    private BottomNavigationHideListener bottomNavigationHideListener;
 
     private Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
         @Override
@@ -91,6 +93,7 @@ public class SearchBeerNameFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        bottomNavigationHideListener.showBottomNavMenu();
         if(beerNameAdapter.getItemCount() == 0){
             emptyMessage.setVisibility(View.VISIBLE);
         }else {
@@ -103,6 +106,7 @@ public class SearchBeerNameFragment extends Fragment {
         MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) getActivity();
         beerNameAdapter = new BeerNameAdapter(getContext(), moveToDetailsBeerListener);
         RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
+        bottomNavigationHideListener = (BottomNavigationHideListener) getActivity();
         super.onCreate(savedInstanceState);
     }
 

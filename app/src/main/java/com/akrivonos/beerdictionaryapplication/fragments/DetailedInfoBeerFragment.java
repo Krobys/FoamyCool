@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.akrivonos.beerdictionaryapplication.R;
+import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ public class DetailedInfoBeerFragment extends Fragment {
     private TextView detailedInfoBeer;
     private ImageView imageBeer;
     private MoveBackListener moveBackListener;
+    private BottomNavigationHideListener bottomNavigationHideListener;
     public DetailedInfoBeerFragment() {
         // Required empty public constructor
     }
@@ -39,8 +41,15 @@ public class DetailedInfoBeerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         moveBackListener = (MoveBackListener) getActivity();
+        bottomNavigationHideListener = (BottomNavigationHideListener) getActivity();
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        bottomNavigationHideListener.hideBottomNavMenu();
+        super.onResume();
     }
 
     @Override
