@@ -103,10 +103,12 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
     public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
         Log.d("test", "onViewAttachedToWindow: "+holder.getAdapterPosition());
         if(holder.getAdapterPosition() + 3 == beerTypesList.size()){
-            int currentPage = pageSettingsDownloadingAdapter.getCurrentPage();
-            int pagesAmount = pageSettingsDownloadingAdapter.getPagesAmount();
-            if(currentPage < pagesAmount)
-            RetrofitSearchBeer.getInstance().startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage()+1);
+            if(pageSettingsDownloadingAdapter != null){
+                int currentPage = pageSettingsDownloadingAdapter.getCurrentPage();
+                int pagesAmount = pageSettingsDownloadingAdapter.getPagesAmount();
+                if(currentPage < pagesAmount)
+                    RetrofitSearchBeer.getInstance().startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage()+1);
+            }
         }
         super.onViewAttachedToWindow(holder);
     }

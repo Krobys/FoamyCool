@@ -11,4 +11,8 @@
         android:icon="@drawable/ic_near_me_black_24dp"
         android:title="Breweries on map" />
 
+    <item
+        android:id="@+id/navigation_favorite_beers"
+        android:icon="@drawable/ic_star_black_24dp"
+        android:title="Favorite Beer"/>
 </menu>

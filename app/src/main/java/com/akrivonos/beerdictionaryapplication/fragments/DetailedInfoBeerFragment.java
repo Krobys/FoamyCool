@@ -85,6 +85,7 @@ public class DetailedInfoBeerFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.detailed_beer_menu, menu);
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         if(appCompatActivity != null){
             ActionBar actionBar = appCompatActivity.getSupportActionBar();

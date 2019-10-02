@@ -46,5 +46,13 @@
         <action
             android:id="@+id/action_mapSearchFragment_to_navigation_search_beer"
             app:destination="@id/navigation_search_beer" />
+        <action
+            android:id="@+id/action_navigation_map_search_to_favoriteBeerFragment"
+            app:destination="@id/favoriteBeerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/favoriteBeerFragment"
+        android:name="com.akrivonos.beerdictionaryapplication.fragments.FavoriteBeerFragment"
+        android:label="fragment_favorite_beer"
+        tools:layout="@layout/fragment_favorite_beer" />
 </navigation>

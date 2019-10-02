@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
                 case R.id.navigation_search_brewery:
                         navController.navigate(R.id.navigation_map_search);
                     return true;
+                case R.id.navigation_favorite_beers:
+
+                    break;
             }
             return false;
         }
