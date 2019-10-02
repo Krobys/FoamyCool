@@ -1,4 +1,4 @@
-package com.akrivonos.beerdictionaryapplication.models;
+package com.akrivonos.beerdictionaryapplication.pojo_models.beers_in_brewery_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -32,22 +32,12 @@ public class Labels {
         this.icon = icon;
     }
 
-    public Labels withIcon(String icon) {
-        this.icon = icon;
-        return this;
-    }
-
     public String getMedium() {
         return medium;
     }
 
     public void setMedium(String medium) {
         this.medium = medium;
-    }
-
-    public Labels withMedium(String medium) {
-        this.medium = medium;
-        return this;
     }
 
     public String getLarge() {
@@ -58,22 +48,12 @@ public class Labels {
         this.large = large;
     }
 
-    public Labels withLarge(String large) {
-        this.large = large;
-        return this;
-    }
-
     public String getContentAwareIcon() {
         return contentAwareIcon;
     }
 
     public void setContentAwareIcon(String contentAwareIcon) {
         this.contentAwareIcon = contentAwareIcon;
-    }
-
-    public Labels withContentAwareIcon(String contentAwareIcon) {
-        this.contentAwareIcon = contentAwareIcon;
-        return this;
     }
 
     public String getContentAwareMedium() {
@@ -84,22 +64,12 @@ public class Labels {
         this.contentAwareMedium = contentAwareMedium;
     }
 
-    public Labels withContentAwareMedium(String contentAwareMedium) {
-        this.contentAwareMedium = contentAwareMedium;
-        return this;
-    }
-
     public String getContentAwareLarge() {
         return contentAwareLarge;
     }
 
     public void setContentAwareLarge(String contentAwareLarge) {
         this.contentAwareLarge = contentAwareLarge;
-    }
-
-    public Labels withContentAwareLarge(String contentAwareLarge) {
-        this.contentAwareLarge = contentAwareLarge;
-        return this;
     }
 
 }

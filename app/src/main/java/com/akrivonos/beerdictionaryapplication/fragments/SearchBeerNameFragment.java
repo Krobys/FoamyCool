@@ -1,25 +1,25 @@
 package com.akrivonos.beerdictionaryapplication.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -30,19 +30,16 @@ import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
-import com.akrivonos.beerdictionaryapplication.models.BeerModel;
 import com.akrivonos.beerdictionaryapplication.retrofit.RetrofitSearchBeer;
 import com.jakewharton.rxbinding3.widget.RxSearchView;
-import com.jakewharton.rxbinding3.widget.RxTextView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.MaybeObserver;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class SearchBeerNameFragment extends Fragment {
 
@@ -66,9 +63,9 @@ public class SearchBeerNameFragment extends Fragment {
         @Override
         public void onNext(ArrayList<BeerDetailedDescription> beerModels) {
             if(beerModels.size() != 0) {
-                progressBar.setVisibility(View.GONE);
                 emptyMessage.setVisibility(View.GONE);
                 beerNameAdapter.setData(beerModels);
+                progressBar.setVisibility(View.GONE);
                 beerNameAdapter.notifyDataSetChanged();
             }else{
                 Toast.makeText(getContext(), "No Data", Toast.LENGTH_SHORT).show();
@@ -82,7 +79,6 @@ public class SearchBeerNameFragment extends Fragment {
 
         @Override
         public void onComplete() {
-
         }
     };
 
@@ -90,23 +86,23 @@ public class SearchBeerNameFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        bottomNavigationHideListener.showBottomNavMenu();
-        if(beerNameAdapter.getItemCount() == 0){
-            emptyMessage.setVisibility(View.VISIBLE);
-        }else {
-            emptyMessage.setVisibility(View.GONE);
-        }
+    void disposeAll(){
+        observerBeerDisposable.dispose();
+        searchViewDisposable.dispose();
+    }
+
+    void makeObservers(){
+        RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) getActivity();
-        beerNameAdapter = new BeerNameAdapter(getContext(), moveToDetailsBeerListener);
-        RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
-        bottomNavigationHideListener = (BottomNavigationHideListener) getActivity();
+        Activity activity = getActivity();
+        if(activity != null){
+            MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
+            beerNameAdapter = new BeerNameAdapter(activity, moveToDetailsBeerListener);
+            bottomNavigationHideListener = (BottomNavigationHideListener) activity;
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -121,9 +117,26 @@ public class SearchBeerNameFragment extends Fragment {
         beerNameRecyclerView = view.findViewById(R.id.beer_name_recycle_view);
         beerNameRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         beerNameRecyclerView.setAdapter(beerNameAdapter);
+
+        makeObservers();
+        setUpScreen();
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        disposeAll();
+    }
+
+    private void setUpScreen(){
+        bottomNavigationHideListener.showBottomNavMenu();
+        if(beerNameAdapter.getItemCount() == 0){
+            emptyMessage.setVisibility(View.VISIBLE);
+        }else {
+            emptyMessage.setVisibility(View.GONE);
+        }
+    }
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.top_bar_menu_name_beer, menu);
@@ -137,8 +150,7 @@ public class SearchBeerNameFragment extends Fragment {
                 .subscribe(searchText -> {
                     progressBar.setVisibility(View.VISIBLE);
                     RetrofitSearchBeer.getInstance()
-                            .cancelLastDownloadingProcess()
-                            .startDownloadPictures(searchText, TYPE_BEER, 1);
+                            .startDownloadBeerList(searchText, TYPE_BEER, 1);
                 });
         searchView.setIconified(beerNameAdapter.isSetted());
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
@@ -153,14 +165,4 @@ public class SearchBeerNameFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public void onDestroy() {
-        disposeAll();
-        super.onDestroy();
-    }
-
-    private void disposeAll(){
-        searchViewDisposable.dispose();
-        observerBeerDisposable.dispose();
-    }
 }

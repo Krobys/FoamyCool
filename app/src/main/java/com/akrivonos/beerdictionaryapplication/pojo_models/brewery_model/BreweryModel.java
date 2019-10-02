@@ -1,11 +1,10 @@
-package com.akrivonos.beerdictionaryapplication.models;
+package com.akrivonos.beerdictionaryapplication.pojo_models.brewery_model;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class BeerModel {
+public class BreweryModel {
 
     @SerializedName("currentPage")
     @Expose
@@ -13,6 +12,9 @@ public class BeerModel {
     @SerializedName("numberOfPages")
     @Expose
     private Integer numberOfPages;
+    @SerializedName("totalResults")
+    @Expose
+    private Integer totalResults;
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
@@ -28,11 +30,6 @@ public class BeerModel {
         this.currentPage = currentPage;
     }
 
-    public BeerModel withCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
-        return this;
-    }
-
     public Integer getNumberOfPages() {
         return numberOfPages;
     }
@@ -41,9 +38,12 @@ public class BeerModel {
         this.numberOfPages = numberOfPages;
     }
 
-    public BeerModel withNumberOfPages(Integer numberOfPages) {
-        this.numberOfPages = numberOfPages;
-        return this;
+    public Integer getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
     }
 
     public List<Datum> getData() {
@@ -54,22 +54,12 @@ public class BeerModel {
         this.data = data;
     }
 
-    public BeerModel withData(List<Datum> data) {
-        this.data = data;
-        return this;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public BeerModel withStatus(String status) {
-        this.status = status;
-        return this;
     }
 
 }

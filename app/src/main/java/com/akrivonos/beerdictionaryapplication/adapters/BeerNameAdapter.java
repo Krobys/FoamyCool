@@ -1,6 +1,7 @@
 package com.akrivonos.beerdictionaryapplication.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
-import com.akrivonos.beerdictionaryapplication.models.BeerModel;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.schedulers.Schedulers;
 
 public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTypeViewHolder> {
     private MoveToDetailsBeerListener moveToDetailsBeerListener;
@@ -68,6 +66,7 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
 
     @Override
     public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
+        Log.d("test", "onViewAttachedToWindow: "+holder.getAdapterPosition());
         //TODO добавить постраничную подгрузку
         super.onViewAttachedToWindow(holder);
     }

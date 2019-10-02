@@ -6,13 +6,13 @@
 
     <TextView
         android:id="@+id/name_brewery"
-        android:layout_width="wrap_content"
+        android:layout_width="218dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="45dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
         android:layout_toStartOf="@+id/imageView2"
+        android:layout_toEndOf="@+id/image_brewery"
         android:textSize="15sp" />
 
     <ImageView
@@ -23,5 +23,15 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="15dp"
         android:src="@drawable/ic_navigate_next_black_24dp" />
+
+    <ImageView
+        android:id="@+id/image_brewery"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        app:srcCompat="@drawable/beer_icon" />
 
 </RelativeLayout>

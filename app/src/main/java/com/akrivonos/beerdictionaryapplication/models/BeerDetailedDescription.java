@@ -3,6 +3,8 @@ package com.akrivonos.beerdictionaryapplication.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import static com.akrivonos.beerdictionaryapplication.utils.UrlUtils.makeUrlIconFix;
+
 public class BeerDetailedDescription implements Parcelable {
 
     private String iconSmallUrl;
@@ -75,17 +77,7 @@ public class BeerDetailedDescription implements Parcelable {
         this.description = description;
     }
 
-    private String makeUrlIconFix(String urlIcon){
-        StringBuilder stringBuilder = new StringBuilder(urlIcon);
-        int pointer = 0;
-        while (pointer < stringBuilder.length()){
-            if(stringBuilder.charAt(pointer) == '\\'){
-                stringBuilder.deleteCharAt(pointer);
-            }
-            pointer++;
-        }
-        return stringBuilder.toString();
-    }
+
 
     @Override
     public int describeContents() {

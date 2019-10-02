@@ -1,4 +1,4 @@
-package com.akrivonos.beerdictionaryapplication.models;
+package com.akrivonos.beerdictionaryapplication.pojo_models.beer_model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
