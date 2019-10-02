@@ -9,8 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,7 +38,7 @@ import io.reactivex.disposables.Disposable;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
-public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
+class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private final static int MY_MAP_PERMISSION_CODE = 12;
     private GoogleMap map;
     private MapCoordinatesBreweryListener mapCoordinatesBreweryListener;

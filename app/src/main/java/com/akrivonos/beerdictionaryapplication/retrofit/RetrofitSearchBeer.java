@@ -16,13 +16,13 @@ import com.akrivonos.beerdictionaryapplication.pojo_models.brewery_model.Brewery
 import com.akrivonos.beerdictionaryapplication.pojo_models.brewery_model.Images;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.subjects.AsyncSubject;
 import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.ReplaySubject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,6 +30,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
+@SuppressWarnings("UnusedReturnValue")
 public class RetrofitSearchBeer {
 
     private Call lastProcess;
@@ -107,7 +108,7 @@ public class RetrofitSearchBeer {
             }
 
             @Override
-            public void onFailure(Call<BeerModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<BeerModel> call, @NotNull Throwable t) {
                 if(beerPublishSubject.hasObservers())
                     beerPublishSubject.onNext(new ArrayList<>());
             }
@@ -145,7 +146,7 @@ public class RetrofitSearchBeer {
             }
 
             @Override
-            public void onFailure(Call<BreweryModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<BreweryModel> call, @NonNull Throwable t) {
                 if(breweryPublishSubject.hasObservers())
                     breweryPublishSubject.onNext(new ArrayList<>());
 
@@ -174,7 +175,7 @@ public class RetrofitSearchBeer {
             }
 
             @Override
-            public void onFailure(Call<BreweryBeersModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<BreweryBeersModel> call, @NonNull Throwable t) {
                 if(beerPublishSubject.hasObservers())
                     beerPublishSubject.onNext(new ArrayList<>());
             }

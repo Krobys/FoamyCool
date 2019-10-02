@@ -4,16 +4,12 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
-import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
@@ -41,18 +36,16 @@ import io.reactivex.disposables.Disposable;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.DETAILED_INFO_BREWERY;
 
-public class DetailedInfoBreweryFragment extends Fragment {
-
+class DetailedInfoBreweryFragment extends Fragment {
+    private Disposable observerBeerDisposable;
     private MoveBackListener moveBackListener;
     private BeerNameAdapter beerNameAdapter;
-    private RecyclerView recyclerViewBeers;
     private ImageView imageBrewery;
     private TextView descriptionBrewery;
-    private Disposable observerBeerDisposable;
     private ProgressBar progressBar;
     private ConstraintLayout noBeerMessage;
 
-    private Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
+    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
         @Override
         public void onSubscribe(Disposable d) {
             observerBeerDisposable = d;
@@ -103,11 +96,11 @@ public class DetailedInfoBreweryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_brewery, container, false);
         setHasOptionsMenu(true);
-        recyclerViewBeers = view.findViewById(R.id.recycler_view_beers_in_brewery);
+        RecyclerView recyclerViewBeers = view.findViewById(R.id.recycler_view_beers_in_brewery);
         recyclerViewBeers.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewBeers.setAdapter(beerNameAdapter);
 
@@ -121,8 +114,18 @@ public class DetailedInfoBreweryFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        disposeAll();
+    }
+
     private void makeObservers(){
         RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
+    }
+
+    private void disposeAll(){
+        observerBeerDisposable.dispose();
     }
 
     private void startLoadBeerData(String idBrewery){

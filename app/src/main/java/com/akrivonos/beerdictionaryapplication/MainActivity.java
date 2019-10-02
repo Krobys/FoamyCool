@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     private Toolbar toolbar;
     private NavController navController;
     private BottomNavigationView navView;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override

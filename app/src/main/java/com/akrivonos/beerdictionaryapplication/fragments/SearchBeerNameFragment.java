@@ -42,8 +42,6 @@ public class SearchBeerNameFragment extends Fragment{
 
     public final static String TYPE_BEER = "beer";
 
-    private RecyclerView beerNameRecyclerView;
-    private SearchView searchView;
     private BeerNameAdapter beerNameAdapter;
     private Disposable observerBeerDisposable;
     private ProgressBar progressBar;
@@ -51,7 +49,7 @@ public class SearchBeerNameFragment extends Fragment{
     private LinearLayout emptyMessage;
     private BottomNavigationHideListener bottomNavigationHideListener;
 
-    private Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
+    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
         @Override
         public void onSubscribe(Disposable d) {
             observerBeerDisposable = d;
@@ -83,12 +81,13 @@ public class SearchBeerNameFragment extends Fragment{
         // Required empty public constructor
     }
 
-    void disposeAll(){
+    private void disposeAll(){
         observerBeerDisposable.dispose();
         searchViewDisposable.dispose();
+        beerNameAdapter.disposePageObserver();
     }
 
-    void makeObservers(){
+    private void makeObservers(){
         RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
     }
 
@@ -104,14 +103,14 @@ public class SearchBeerNameFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_beer_name, container, false);
         setHasOptionsMenu(true);
         progressBar = view.findViewById(R.id.progressBarBeer);
 
         emptyMessage = view.findViewById(R.id.empty_data_message);
-        beerNameRecyclerView = view.findViewById(R.id.beer_name_recycle_view);
+        RecyclerView beerNameRecyclerView = view.findViewById(R.id.beer_name_recycle_view);
         beerNameRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         beerNameRecyclerView.setAdapter(beerNameAdapter);
 
@@ -139,7 +138,7 @@ public class SearchBeerNameFragment extends Fragment{
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.top_bar_menu_name_beer, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) menuItem.getActionView();
+        SearchView searchView = (SearchView) menuItem.getActionView();
         searchViewDisposable = RxSearchView.queryTextChangeEvents(searchView)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .map(o -> o.getQueryText().toString())

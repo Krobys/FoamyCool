@@ -27,7 +27,7 @@ import io.reactivex.disposables.Disposable;
 import static com.akrivonos.beerdictionaryapplication.fragments.SearchBeerNameFragment.TYPE_BEER;
 
 public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTypeViewHolder> {
-    private MoveToDetailsBeerListener moveToDetailsBeerListener;
+    private final MoveToDetailsBeerListener moveToDetailsBeerListener;
     private Disposable disposablePageSettings;
     private List<BeerDetailedDescription> beerTypesList = new ArrayList<>();
     private PageSettingsDownloading pageSettingsDownloadingAdapter;
@@ -118,8 +118,8 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
 
     class BeerTypeViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iconBeerImageView;
-        TextView nameBeerTextView;
+        final ImageView iconBeerImageView;
+        final TextView nameBeerTextView;
         BeerDetailedDescription beerDetailedDescription;
 
         BeerTypeViewHolder(@NonNull View itemView) {

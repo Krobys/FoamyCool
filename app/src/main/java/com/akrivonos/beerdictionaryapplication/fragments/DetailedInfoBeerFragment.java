@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,7 @@ import com.bumptech.glide.Glide;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.DETAILED_INFO_BEER;
 
-public class DetailedInfoBeerFragment extends Fragment {
+class DetailedInfoBeerFragment extends Fragment {
 
     private TextView categoryBeerTextView;
     private TextView detailedInfoBeer;
@@ -52,7 +51,7 @@ public class DetailedInfoBeerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_beer, container, false);
         categoryBeerTextView = view.findViewById(R.id.category_text_beer);
@@ -62,7 +61,7 @@ public class DetailedInfoBeerFragment extends Fragment {
         return view;
     }
 
-    void setUpBeerInformation(){
+    private void setUpBeerInformation(){
         Bundle bundle = getArguments();
         if(bundle != null){
             BeerDetailedDescription beerDetailedDescription = bundle.getParcelable(DETAILED_INFO_BEER);

@@ -20,8 +20,8 @@ import java.util.List;
 
 public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryViewHolder> {
     private List<BreweryDetailedDescription> breweryList = new ArrayList<>();
-    private LayoutInflater layoutInflater;
-    private MoveToDetailsBreweryListener moveToDetailsBreweryListener;
+    private final LayoutInflater layoutInflater;
+    private final MoveToDetailsBreweryListener moveToDetailsBreweryListener;
 
     public void setData(List<BreweryDetailedDescription> breweryList){
         this.breweryList = breweryList;
@@ -69,11 +69,11 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
     }
 
     class BreweryViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageBrewery;
-        TextView nameBrewery;
+        final ImageView imageBrewery;
+        final TextView nameBrewery;
         BreweryDetailedDescription breweryDetailedDescription;
 
-        public BreweryViewHolder(@NonNull View itemView) {
+        BreweryViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(v->moveToDetailsBreweryListener.moveToDetails(breweryDetailedDescription));
             imageBrewery = itemView.findViewById(R.id.image_brewery);
