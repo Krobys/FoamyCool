@@ -3,17 +3,7 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
@@ -36,14 +34,13 @@ import com.jakewharton.rxbinding3.widget.RxSearchView;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.MaybeObserver;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public class SearchBeerNameFragment extends Fragment {
+public class SearchBeerNameFragment extends Fragment{
 
-    final static String TYPE_BEER = "beer";
+    public final static String TYPE_BEER = "beer";
 
     private RecyclerView beerNameRecyclerView;
     private SearchView searchView;
@@ -64,7 +61,7 @@ public class SearchBeerNameFragment extends Fragment {
         public void onNext(ArrayList<BeerDetailedDescription> beerModels) {
             if(beerModels.size() != 0) {
                 emptyMessage.setVisibility(View.GONE);
-                beerNameAdapter.setData(beerModels);
+                beerNameAdapter.addData(beerModels);
                 progressBar.setVisibility(View.GONE);
                 beerNameAdapter.notifyDataSetChanged();
             }else{
@@ -137,6 +134,7 @@ public class SearchBeerNameFragment extends Fragment {
             emptyMessage.setVisibility(View.GONE);
         }
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.top_bar_menu_name_beer, menu);
@@ -164,5 +162,4 @@ public class SearchBeerNameFragment extends Fragment {
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 }

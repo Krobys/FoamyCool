@@ -14,19 +14,54 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
+import com.akrivonos.beerdictionaryapplication.models.PageSettingsDownloading;
+import com.akrivonos.beerdictionaryapplication.retrofit.RetrofitSearchBeer;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
+import static com.akrivonos.beerdictionaryapplication.fragments.SearchBeerNameFragment.TYPE_BEER;
+
 public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTypeViewHolder> {
     private MoveToDetailsBeerListener moveToDetailsBeerListener;
+    private Disposable disposablePageSettings;
     private List<BeerDetailedDescription> beerTypesList = new ArrayList<>();
+    private PageSettingsDownloading pageSettingsDownloadingAdapter;
+    private String beerTypeName;
     private final LayoutInflater layoutInflater;
 
     public BeerNameAdapter(Context context, MoveToDetailsBeerListener moveToDetailsBeerListener){
         this.moveToDetailsBeerListener = moveToDetailsBeerListener;
         layoutInflater = LayoutInflater.from(context);
+        Observer<PageSettingsDownloading> pageSettingsDownloadingObserver = new Observer<PageSettingsDownloading>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposablePageSettings = d;
+            }
+
+            @Override
+            public void onNext(PageSettingsDownloading pageSettingsDownloading) {
+                pageSettingsDownloadingAdapter = pageSettingsDownloading;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        };
+        RetrofitSearchBeer.getInstance().setObserverPageSettingsAdapter(pageSettingsDownloadingObserver);
+    }
+
+    public void disposePageObserver(){
+        disposablePageSettings.dispose();
     }
 
     public void setData(List<BeerDetailedDescription> beerList){
@@ -34,11 +69,12 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
     }
 
     public void addData(List<BeerDetailedDescription> beerList){
+        String addedBeerName = beerList.get(0).getNameBeer();
+        if(beerList.size() != 0 && !addedBeerName.equals(beerTypeName)){
+            beerTypesList.clear();
+            beerTypeName = addedBeerName;
+        }
         beerTypesList.addAll(beerList);
-    }
-
-    public void throwOffData(){
-        beerTypesList.clear();
     }
 
     public boolean isSetted(){
@@ -61,13 +97,17 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         Glide.with(holder.iconBeerImageView)
                     .load(detailsBeer.getIconSmallUrl())
                     .into(holder.iconBeerImageView);
-
     }
 
     @Override
     public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
         Log.d("test", "onViewAttachedToWindow: "+holder.getAdapterPosition());
-        //TODO добавить постраничную подгрузку
+        if(holder.getAdapterPosition() + 3 == beerTypesList.size()){
+            int currentPage = pageSettingsDownloadingAdapter.getCurrentPage();
+            int pagesAmount = pageSettingsDownloadingAdapter.getPagesAmount();
+            if(currentPage < pagesAmount)
+            RetrofitSearchBeer.getInstance().startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage()+1);
+        }
         super.onViewAttachedToWindow(holder);
     }
 

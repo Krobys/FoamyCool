@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.akrivonos.beerdictionaryapplication.models.BreweryDetailedDescription;
+import com.akrivonos.beerdictionaryapplication.models.PageSettingsDownloading;
 import com.akrivonos.beerdictionaryapplication.pojo_models.beer_model.BeerModel;
 import com.akrivonos.beerdictionaryapplication.pojo_models.beer_model.Datum;
 import com.akrivonos.beerdictionaryapplication.pojo_models.beer_model.Labels;
@@ -34,6 +35,7 @@ public class RetrofitSearchBeer {
     private Call lastProcess;
     private PublishSubject<ArrayList<BeerDetailedDescription>> beerPublishSubject;
     private PublishSubject<ArrayList<BreweryDetailedDescription>> breweryPublishSubject;
+    private PublishSubject<PageSettingsDownloading> pageSettingsDownloadingPublishSubject;
     private final static String SANDBOX_API_KEY = "14bac69989f93ce2755e0830d3a5c851";
     private final static String BASE_URL = "https://sandbox-api.brewerydb.com/v2/";
     private final static String UNIT_SEARCH_MI = "mi";
@@ -75,6 +77,15 @@ public class RetrofitSearchBeer {
         return retrofitSearchDownload;
     }
 
+    public RetrofitSearchBeer setObserverPageSettingsAdapter(io.reactivex.Observer<PageSettingsDownloading> observer){
+        pageSettingsDownloadingPublishSubject = PublishSubject.create();
+        pageSettingsDownloadingPublishSubject
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+        return retrofitSearchDownload;
+    }
+
     public RetrofitSearchBeer startDownloadBeerList(String searchBeerName, String typeRequestName, int pageToLoad) {
 
         Call<BeerModel> beerModelCall = apiService.searchBeerByName(SANDBOX_API_KEY, searchBeerName, typeRequestName, pageToLoad);
@@ -87,6 +98,7 @@ public class RetrofitSearchBeer {
                     if(beerModel != null){
                         if (response.code() == 200){
                                beerPublishSubject.onNext(makeBeerListFromBeerModel(beerModel));
+                               pageSettingsDownloadingPublishSubject.onNext(makePageSettings(beerModel));
                         }
                         else{
                             beerPublishSubject.onNext(new ArrayList<>());
@@ -232,5 +244,11 @@ public class RetrofitSearchBeer {
                 breweryList.add(breweryDetailedDescription);
             }
         return breweryList;
+    }
+
+    private PageSettingsDownloading makePageSettings(BeerModel beerModel){
+        int currentPage = beerModel.getCurrentPage();
+        int pagesAmount = beerModel.getNumberOfPages();
+        return new PageSettingsDownloading(currentPage, pagesAmount);
     }
 }
