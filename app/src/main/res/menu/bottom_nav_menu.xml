@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/navigation_search_brewery"
-        android:icon="@drawable/ic_location_on_black_24dp"
-        android:title="Geo brewery" />
+        android:icon="@drawable/ic_near_me_black_24dp"
+        android:title="Breweries on map" />
 
 </menu>
