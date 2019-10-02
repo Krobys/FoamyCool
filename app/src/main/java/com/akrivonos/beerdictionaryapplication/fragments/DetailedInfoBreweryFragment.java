@@ -36,7 +36,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.DETAILED_INFO_BREWERY;
 
-class DetailedInfoBreweryFragment extends Fragment {
+public class DetailedInfoBreweryFragment extends Fragment {
     private Disposable observerBeerDisposable;
     private MoveBackListener moveBackListener;
     private BeerNameAdapter beerNameAdapter;

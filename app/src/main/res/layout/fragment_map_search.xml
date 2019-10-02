@@ -26,12 +26,13 @@
         <Button
             android:id="@+id/choose_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Find breweries nearby"
+            android:layout_height="35dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/shape_button"
+            android:padding="3dp"
+            android:text="Find breweries on map"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView

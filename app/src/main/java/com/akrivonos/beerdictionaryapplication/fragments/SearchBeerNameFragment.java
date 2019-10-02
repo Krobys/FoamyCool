@@ -60,11 +60,11 @@ public class SearchBeerNameFragment extends Fragment{
             if(beerModels.size() != 0) {
                 emptyMessage.setVisibility(View.GONE);
                 beerNameAdapter.addData(beerModels);
-                progressBar.setVisibility(View.GONE);
                 beerNameAdapter.notifyDataSetChanged();
             }else{
                 Toast.makeText(getContext(), "No Data", Toast.LENGTH_SHORT).show();
             }
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override

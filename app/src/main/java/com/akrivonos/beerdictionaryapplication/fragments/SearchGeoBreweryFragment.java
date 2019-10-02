@@ -36,7 +36,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.COORDINATES_BREWERIES_SEARCH;
 
-class SearchGeoBreweryFragment extends Fragment {
+public class SearchGeoBreweryFragment extends Fragment {
 
     private BreweryAdapter breweryAdapter;
     private Disposable observerBreweryDisposable;

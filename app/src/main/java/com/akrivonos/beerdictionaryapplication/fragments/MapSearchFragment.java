@@ -38,7 +38,7 @@ import io.reactivex.disposables.Disposable;
 
 import static androidx.core.content.ContextCompat.checkSelfPermission;
 
-class MapSearchFragment extends Fragment implements OnMapReadyCallback {
+public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private final static int MY_MAP_PERMISSION_CODE = 12;
     private GoogleMap map;
     private MapCoordinatesBreweryListener mapCoordinatesBreweryListener;

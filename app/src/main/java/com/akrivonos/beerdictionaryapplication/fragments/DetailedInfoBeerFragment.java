@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.DETAILED_INFO_BEER;
 
-class DetailedInfoBeerFragment extends Fragment {
+public class DetailedInfoBeerFragment extends Fragment {
 
     private TextView categoryBeerTextView;
     private TextView detailedInfoBeer;
