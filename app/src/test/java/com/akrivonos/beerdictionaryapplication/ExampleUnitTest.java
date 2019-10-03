@@ -15,5 +15,19 @@ public class ExampleUnitTest {
         assertEquals(expectedUrl, UrlUtils.makeUrlIconFix(sourceUrl));
     }
 
+    @Test
+    public void fixUrlTool_isCorrectWhenNull() {
+        String expectedUrl = "";
+        String sourceUrl = null;
+        assertEquals(expectedUrl, UrlUtils.makeUrlIconFix(sourceUrl));
+    }
+
+    @Test
+    public void fixUrlTool_isCorrectWhenEmpty() {
+        String expectedUrl = "";
+        String sourceUrl = "";
+        assertEquals(expectedUrl, UrlUtils.makeUrlIconFix(sourceUrl));
+    }
+
 
 }
