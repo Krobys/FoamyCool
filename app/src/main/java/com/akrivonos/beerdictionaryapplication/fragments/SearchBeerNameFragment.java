@@ -3,7 +3,6 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +28,7 @@ import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideLi
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.akrivonos.beerdictionaryapplication.retrofit.RetrofitSearchBeer;
+import com.akrivonos.beerdictionaryapplication.utils.InternetUtils;
 import com.jakewharton.rxbinding3.widget.RxSearchView;
 
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public class SearchBeerNameFragment extends Fragment {
         searchViewDisposable = RxSearchView.queryTextChangeEvents(searchView)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .map(o -> o.getQueryText().toString())
-                .filter(searchText -> searchText.length() > 2 && !TextUtils.isEmpty(searchText))
+                .filter(searchText -> searchText.length() > 2 && InternetUtils.hasInternetConnection(getContext()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchText -> {
                     progressBar.setVisibility(View.VISIBLE);
