@@ -2,6 +2,7 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListe
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.akrivonos.beerdictionaryapplication.retrofit.RetrofitSearchBeer;
 import com.akrivonos.beerdictionaryapplication.utils.InternetUtils;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding3.widget.RxSearchView;
 
 import java.util.ArrayList;
@@ -142,12 +144,19 @@ public class SearchBeerNameFragment extends Fragment {
         searchViewDisposable = RxSearchView.queryTextChangeEvents(searchView)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .map(o -> o.getQueryText().toString())
-                .filter(searchText -> searchText.length() > 2 && InternetUtils.hasInternetConnection(getContext()))
+                .filter(searchText -> searchText.length() > 2)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchText -> {
-                    progressBar.setVisibility(View.VISIBLE);
-                    RetrofitSearchBeer.getInstance()
-                            .startDownloadBeerList(searchText, TYPE_BEER, 1);
+                    Context context = getContext();
+                    if (context != null && InternetUtils.hasInternetConnection(context)) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        RetrofitSearchBeer.getInstance()
+                                .startDownloadBeerList(searchText, TYPE_BEER, 1);
+                    } else {
+                        View view = getView();
+                        if (view != null)
+                            Snackbar.make(getView(), "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                    }
                 });
         searchView.setIconified(beerNameAdapter.isSet());
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();

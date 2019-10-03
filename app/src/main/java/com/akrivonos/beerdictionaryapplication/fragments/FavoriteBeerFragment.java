@@ -3,6 +3,7 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +47,11 @@ public class FavoriteBeerFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             if (direction == ItemTouchHelper.LEFT) {
                 String beerId = beerNameAdapterFavorites.getItem(viewHolder.getAdapterPosition()).getId();
-                appDatabase.favoriteBeerDao().setBeerNotFavorite(beerId);
+                Log.d("test", "beer id: " + beerId);
+                appDatabase.favoriteBeerDao().setBeerNotFavorite(beerId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .subscribe();
             }
         }
     };

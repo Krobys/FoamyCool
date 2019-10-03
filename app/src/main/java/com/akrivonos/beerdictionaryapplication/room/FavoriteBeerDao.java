@@ -14,7 +14,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface FavoriteBeerDao {
 
-    @Query("SELECT * FROM BeerDetailedDescription")
+    @Query("SELECT * FROM BeerDetailedDescription ORDER BY idInc DESC")
     Flowable<List<BeerDetailedDescription>> getFavoritesBeer();
 
     @Insert
