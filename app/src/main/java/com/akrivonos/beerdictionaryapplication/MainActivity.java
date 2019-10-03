@@ -1,10 +1,8 @@
 package com.akrivonos.beerdictionaryapplication;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
@@ -37,26 +35,6 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     private Toolbar toolbar;
     private NavController navController;
     private BottomNavigationView navView;
-    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_search_beer:
-                        navController.navigate(R.id.navigation_search_beer);
-                    return true;
-                case R.id.navigation_search_brewery:
-                        navController.navigate(R.id.navigation_map_search);
-                    return true;
-                case R.id.navigation_favorite_beers:
-
-                    break;
-            }
-            navController.saveState();
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
-        //navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     @Override

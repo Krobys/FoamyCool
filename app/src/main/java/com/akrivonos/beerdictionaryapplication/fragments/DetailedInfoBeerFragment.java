@@ -26,8 +26,6 @@ import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.akrivonos.beerdictionaryapplication.room.RoomAppDatabase;
 import com.bumptech.glide.Glide;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -92,7 +90,6 @@ public class DetailedInfoBeerFragment extends Fragment {
     }
 
     private void setUpBeerInformation(){
-        Log.d("test", "setUpBeerInformation: ");
         Bundle bundle = getArguments();
         if(bundle != null){
             BeerDetailedDescription beerDetailedDescription = bundle.getParcelable(DETAILED_INFO_BEER);
@@ -156,58 +153,16 @@ public class DetailedInfoBeerFragment extends Fragment {
     private void switchFavoriteState(){
         String uniqueBeerId = beerDeatils.getId();
         if(isBeerFavorite){
-            Log.d("test", "switchFavoriteState: -");
-            Completable.fromAction(()-> appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId))
+            appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CompletableObserver() {
-                                   @Override
-                                   public void onSubscribe(Disposable d) {
-
-                                   }
-
-                                   @Override
-                                   public void onComplete() {
-                                       Log.d("test", "switchFavoriteState: set not favorite");
-                                   }
-
-                                   @Override
-                                   public void onError(Throwable e) {
-
-                                   }
-                               });
-//                            appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)
-//                                    .subscribeOn(Schedulers.io())
-//                                    .observeOn(Schedulers.io())
-//                                    .subscribe(() -> Log.d("test", "switchFavoriteState: set not favorite"))
-//                                    .dispose();
+                    .observeOn(Schedulers.io())
+                    .subscribe();
         }else{
-            Log.d("test", "switchFavoriteState: +");
-            Completable.fromAction(()->appDatabase.favoriteBeerDao().setBeerFavorite(beerDeatils))
+            appDatabase.favoriteBeerDao().setBeerFavorite(beerDeatils)
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            Log.d("test", "switchFavoriteState: set favorite");
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-                    });
-//            appDatabase.favoriteBeerDao().setBeerFavorite(new FavoriteBeer(beerDeatils))
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(Schedulers.io())
-//                    .subscribe(() -> Log.d("test", "switchFavoriteState: set favorite"))
-//                    .dispose();
-        }//TODO разобраться с этим
+                    .observeOn(Schedulers.io())
+                    .subscribe();
+        }
     }
 
     private void checkIsFavoriteBeerSetter(String uniqueId, MenuItem favoriteItem){

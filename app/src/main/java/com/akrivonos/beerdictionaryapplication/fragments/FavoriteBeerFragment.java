@@ -32,7 +32,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FavoriteBeerFragment extends Fragment {
     private MoveBackListener moveBackListener;
-    private RecyclerView recyclerViewFavorite;
     private BeerNameAdapter beerNameAdapterFavorites;
     private RoomAppDatabase appDatabase;
     private Disposable favoritesBeerDisposable;
@@ -45,12 +44,10 @@ public class FavoriteBeerFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-           switch (direction){
-               case ItemTouchHelper.LEFT:
-                   String beerId = beerNameAdapterFavorites.getItem(viewHolder.getAdapterPosition()).getId();
-                   appDatabase.favoriteBeerDao().setBeerNotFavorite(beerId);
-                   break;
-           }
+            if (direction == ItemTouchHelper.LEFT) {
+                String beerId = beerNameAdapterFavorites.getItem(viewHolder.getAdapterPosition()).getId();
+                appDatabase.favoriteBeerDao().setBeerNotFavorite(beerId);
+            }
         }
     };
 
@@ -75,7 +72,7 @@ public class FavoriteBeerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_beer, container, false);
         setHasOptionsMenu(true);
-        recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
+        RecyclerView recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
         recyclerViewFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewFavorite.setAdapter(beerNameAdapterFavorites);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewFavorite);

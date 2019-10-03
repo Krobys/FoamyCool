@@ -10,20 +10,14 @@
         android:label="fragment_search_beer_name"
         tools:layout="@layout/fragment_search_beer_name" >
         <action
-            android:id="@+id/action_searchBeerNameFragment2_to_detailedInfoBeerFragment2"
-            app:destination="@id/navigation_detailed_info_beer" />
-        <action
-            android:id="@+id/action_navigation_search_beer_to_mapSearchFragment"
-            app:destination="@id/navigation_map_search" />
+            android:id="@+id/action_navigation_search_beer_to_navigation_favorite_beers3"
+            app:destination="@id/navigation_favorite_beers" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search_brewery"
         android:name="com.akrivonos.beerdictionaryapplication.fragments.SearchGeoBreweryFragment"
         android:label="fragment_search_geo_brewery"
         tools:layout="@layout/fragment_search_geo_brewery" >
-        <action
-            android:id="@+id/action_searchGeoBreweryFragment2_to_detailedInfoBreweryFragment2"
-            app:destination="@id/navigation_detailed_info_brewery" />
     </fragment>
     <fragment
         android:id="@+id/navigation_detailed_info_brewery"
@@ -40,15 +34,6 @@
         android:name="com.akrivonos.beerdictionaryapplication.fragments.MapSearchFragment"
         android:label="fragment_map_search"
         tools:layout="@layout/fragment_map_search" >
-        <action
-            android:id="@+id/action_mapSearchFragment_to_navigation_search_brewery"
-            app:destination="@id/navigation_search_brewery" />
-        <action
-            android:id="@+id/action_mapSearchFragment_to_navigation_search_beer"
-            app:destination="@id/navigation_search_beer" />
-        <action
-            android:id="@+id/action_navigation_map_search_to_favoriteBeerFragment"
-            app:destination="@id/navigation_favorite_beers" />
     </fragment>
     <fragment
         android:id="@+id/navigation_favorite_beers"

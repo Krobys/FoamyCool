@@ -148,11 +148,14 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
+        boolean enabled = false;
         Activity activity = getActivity();
-        if(activity == null) return;
-        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager == null) return;
-        boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(activity != null) {
+            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null){
+                enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+        }
 
         if (enabled) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
