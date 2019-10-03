@@ -3,7 +3,6 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +39,7 @@ public class DetailedInfoBeerFragment extends Fragment {
     private MoveBackListener moveBackListener;
     private BottomNavigationHideListener bottomNavigationHideListener;
     private RoomAppDatabase appDatabase;
-    private BeerDetailedDescription beerDeatils;
+    private BeerDetailedDescription beerDetails;
     private Disposable checkIsFavoriteBeerDisposable;
     private boolean isBeerFavorite;
 
@@ -70,7 +69,6 @@ public class DetailedInfoBeerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_beer, container, false);
-        Log.d("test", "setHasOptionsMenu: ");
         setHasOptionsMenu(true);
         categoryBeerTextView = view.findViewById(R.id.category_text_beer);
         detailedInfoBeer = view.findViewById(R.id.description_text_beer);
@@ -94,7 +92,7 @@ public class DetailedInfoBeerFragment extends Fragment {
         if (bundle != null) {
             BeerDetailedDescription beerDetailedDescription = bundle.getParcelable(DETAILED_INFO_BEER);
             if (beerDetailedDescription != null) {
-                beerDeatils = beerDetailedDescription;
+                beerDetails = beerDetailedDescription;
                 if (beerDetailedDescription.getIconBigUrl() != null)
                     Glide.with(imageBeer)
                             .load(beerDetailedDescription.getIconBigUrl())
@@ -114,11 +112,9 @@ public class DetailedInfoBeerFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        Log.d("test", "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.detailed_beer_menu, menu);
         setUpActionBar();
-        String uniqueIdBeer = beerDeatils.getId();
-        Log.d("test", "onCreateOptionsMenu: uniq id = " + uniqueIdBeer);
+        String uniqueIdBeer = beerDetails.getId();
         MenuItem favoriteItem = menu.findItem(R.id.make_favorite_checker);
         checkIsFavoriteBeerSetter(uniqueIdBeer, favoriteItem);
         super.onCreateOptionsMenu(menu, inflater);
@@ -151,14 +147,14 @@ public class DetailedInfoBeerFragment extends Fragment {
     }
 
     private void switchFavoriteState() {
-        String uniqueBeerId = beerDeatils.getId();
+        String uniqueBeerId = beerDetails.getId();
         if (isBeerFavorite) {
             appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe();
         } else {
-            appDatabase.favoriteBeerDao().setBeerFavorite(beerDeatils)
+            appDatabase.favoriteBeerDao().setBeerFavorite(beerDetails)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe();
@@ -170,7 +166,6 @@ public class DetailedInfoBeerFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
-                    Log.d("test", "checkIsFavoriteBeerSetter: subscribe");
                     isBeerFavorite = (o.size() != 0);
                     favoriteItem.setIcon((isBeerFavorite) ? R.drawable.ic_star_black_24dp : R.drawable.ic_star_border_black_24dp);
                 });

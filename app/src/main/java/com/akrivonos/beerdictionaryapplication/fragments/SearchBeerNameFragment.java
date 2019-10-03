@@ -149,7 +149,7 @@ public class SearchBeerNameFragment extends Fragment {
                     RetrofitSearchBeer.getInstance()
                             .startDownloadBeerList(searchText, TYPE_BEER, 1);
                 });
-        searchView.setIconified(beerNameAdapter.isSetted());
+        searchView.setIconified(beerNameAdapter.isSet());
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();

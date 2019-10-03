@@ -107,7 +107,7 @@ public class SearchGeoBreweryFragment extends Fragment {
     }
 
     private void setUpScreen() {
-        if (breweryAdapter.isSetted()) {
+        if (breweryAdapter.isSet()) {
             progressBar.setVisibility(View.GONE);
         }
         bottomNavigationHideListener.hideBottomNavMenu();

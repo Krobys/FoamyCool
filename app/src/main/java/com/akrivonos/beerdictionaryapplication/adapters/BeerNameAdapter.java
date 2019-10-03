@@ -1,7 +1,6 @@
 package com.akrivonos.beerdictionaryapplication.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +80,7 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         return beerTypesList.get(position);
     }
 
-    public boolean isSetted() {
+    public boolean isSet() {
         return beerTypesList.size() > 0;
     }
 
@@ -105,7 +104,6 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
 
     @Override
     public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
-        Log.d("test", "onViewAttachedToWindow: " + holder.getAdapterPosition());
         if (holder.getAdapterPosition() + 3 == beerTypesList.size()) {
             if (pageSettingsDownloadingAdapter != null) {
                 int currentPage = pageSettingsDownloadingAdapter.getCurrentPage();

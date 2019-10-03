@@ -154,7 +154,7 @@ public class DetailedInfoBreweryFragment extends Fragment {
                 }
             }
         }
-        if (beerNameAdapter.isSetted()) {
+        if (beerNameAdapter.isSet()) {
             progressBar.setVisibility(View.GONE);
         }
     }

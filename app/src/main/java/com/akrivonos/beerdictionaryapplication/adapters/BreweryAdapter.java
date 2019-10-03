@@ -40,7 +40,7 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
         breweryList.clear();
     }
 
-    public boolean isSetted() {
+    public boolean isSet() {
         return breweryList.size() > 0;
     }
 

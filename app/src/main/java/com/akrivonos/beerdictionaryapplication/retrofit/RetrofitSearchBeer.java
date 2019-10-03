@@ -1,7 +1,5 @@
 package com.akrivonos.beerdictionaryapplication.retrofit;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
@@ -93,7 +91,6 @@ public class RetrofitSearchBeer {
         beerModelCall.enqueue(new Callback<BeerModel>() {
             @Override
             public void onResponse(@NonNull Call<BeerModel> call, @NonNull Response<BeerModel> response) {
-                Log.d("test", "onResponse: " + response.toString());
                 BeerModel beerModel = response.body();
                 if (beerPublishSubject.hasObservers())
                     if (beerModel != null) {
@@ -131,7 +128,6 @@ public class RetrofitSearchBeer {
         breweryModelCall.enqueue(new Callback<BreweryModel>() {
             @Override
             public void onResponse(@NonNull Call<BreweryModel> call, @NonNull Response<BreweryModel> response) {
-                Log.d("test", "+" + response.toString());
                 BreweryModel breweryModel = response.body();
                 if (breweryModel != null) {
                     if (breweryPublishSubject.hasObservers())
@@ -159,7 +155,6 @@ public class RetrofitSearchBeer {
         breweryBeersModelCall.enqueue(new Callback<BreweryBeersModel>() {
             @Override
             public void onResponse(@NonNull Call<BreweryBeersModel> call, @NonNull Response<BreweryBeersModel> response) {
-                Log.d("test", "+" + response.toString());
                 BreweryBeersModel breweryBeersModel = response.body();
                 if (breweryBeersModel != null) {
                     if (beerPublishSubject.hasObservers())
