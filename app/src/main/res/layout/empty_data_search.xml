@@ -15,7 +15,6 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_search"
         android:text="@string/enter_your_search_query_nto_search_for_beers_above"
         android:textAlignment="center" />
 
