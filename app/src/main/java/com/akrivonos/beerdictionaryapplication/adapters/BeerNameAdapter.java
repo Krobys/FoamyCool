@@ -77,6 +77,9 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         beerTypesList.addAll(beerList);
     }
 
+    public BeerDetailedDescription getItem(int position){
+        return beerTypesList.get(position);
+    }
     public boolean isSetted(){
         return beerTypesList.size() > 0;
     }

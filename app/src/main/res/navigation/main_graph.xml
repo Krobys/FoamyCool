@@ -48,10 +48,10 @@
             app:destination="@id/navigation_search_beer" />
         <action
             android:id="@+id/action_navigation_map_search_to_favoriteBeerFragment"
-            app:destination="@id/favoriteBeerFragment" />
+            app:destination="@id/navigation_favorite_beers" />
     </fragment>
     <fragment
-        android:id="@+id/favoriteBeerFragment"
+        android:id="@+id/navigation_favorite_beers"
         android:name="com.akrivonos.beerdictionaryapplication.fragments.FavoriteBeerFragment"
         android:label="fragment_favorite_beer"
         tools:layout="@layout/fragment_favorite_beer" />

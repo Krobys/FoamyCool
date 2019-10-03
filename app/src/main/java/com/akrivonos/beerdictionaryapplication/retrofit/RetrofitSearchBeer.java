@@ -191,6 +191,7 @@ public class RetrofitSearchBeer {
         if(dataList != null)
         for (Datum datum: dataList){
             beerDetailedDescription = new BeerDetailedDescription();
+            beerDetailedDescription.setId(datum.getId());
             beerDetailedDescription.setNameBeer(datum.getName());
             beerDetailedDescription.setCategoryBeer(datum.getStyle().getCategory().getName());
             beerDetailedDescription.setDescription(datum.getStyle().getDescription());
@@ -211,6 +212,7 @@ public class RetrofitSearchBeer {
         if(dataList != null)
             for (com.akrivonos.beerdictionaryapplication.pojo_models.beers_in_brewery_model.Datum datum: dataList){
                 beerDetailedDescription = new BeerDetailedDescription();
+                beerDetailedDescription.setId(datum.getId());
                 beerDetailedDescription.setNameBeer(datum.getName());
                 Style style = datum.getStyle();
                 if(style!=null){

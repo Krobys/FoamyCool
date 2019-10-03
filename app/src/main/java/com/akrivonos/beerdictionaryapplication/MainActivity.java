@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MapCoordinatesBreweryListener;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
 
                     break;
             }
+            navController.saveState();
             return false;
         }
     };
@@ -66,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        NavigationUI.setupWithNavController(navView, navController);
+        //navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     @Override

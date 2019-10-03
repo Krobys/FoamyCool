@@ -7,9 +7,9 @@
         android:title="Search" />
 
     <item
-        android:id="@+id/navigation_search_brewery"
+        android:id="@+id/navigation_map_search"
         android:icon="@drawable/ic_near_me_black_24dp"
-        android:title="Breweries on map" />
+        android:title="Breweries" />
 
     <item
         android:id="@+id/navigation_favorite_beers"

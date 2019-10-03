@@ -3,14 +3,28 @@ package com.akrivonos.beerdictionaryapplication.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import static com.akrivonos.beerdictionaryapplication.utils.UrlUtils.makeUrlIconFix;
 
+@Entity
 public class BeerDetailedDescription implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private long idInc;
+    @ColumnInfo(name = "uniqueId")
+    private String id;
+    @ColumnInfo(name = "iconSmall")
     private String iconSmallUrl;
+    @ColumnInfo(name = "iconBig")
     private String iconBigUrl;
+    @ColumnInfo(name = "name")
     private String nameBeer;
+    @ColumnInfo(name = "category")
     private String categoryBeer;
+    @ColumnInfo(name = "description")
     private String description;
 
     public BeerDetailedDescription(){
@@ -78,7 +92,21 @@ public class BeerDetailedDescription implements Parcelable {
     }
 
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public long getIdInc() {
+        return idInc;
+    }
+
+    public void setIdInc(long idInc) {
+        this.idInc = idInc;
+    }
     @Override
     public int describeContents() {
         return 0;
