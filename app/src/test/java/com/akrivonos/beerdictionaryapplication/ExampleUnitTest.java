@@ -1,17 +1,19 @@
 package com.akrivonos.beerdictionaryapplication;
 
+import com.akrivonos.beerdictionaryapplication.utils.UrlUtils;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
 public class ExampleUnitTest {
+
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void fixUrlTool_isCorrect() {
+        String expectedUrl = "https://brewerydb-images.s3.amazonaws.com/beer/Fhw2NF/upload_4QscTY-medium.png";
+        String sourceUrl = "https:\\/\\/brewerydb-images.s3.amazonaws.com\\/beer\\/Fhw2NF\\/upload_4QscTY-medium.png";
+        assertEquals(expectedUrl, UrlUtils.makeUrlIconFix(sourceUrl));
     }
+
+
 }

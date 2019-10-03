@@ -29,6 +29,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/shape_button"
             android:padding="3dp"
+            android:textSize="12sp"
             android:text="@string/find_breweries_on_map"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
