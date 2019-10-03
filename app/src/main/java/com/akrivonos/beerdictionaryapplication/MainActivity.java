@@ -27,8 +27,7 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
         MoveBackListener,
         BottomNavigationHideListener,
         MapCoordinatesBreweryListener,
-        TopBarHideListener
-{
+        TopBarHideListener {
     public static final String DETAILED_INFO_BEER = "detailed_info_beer";
     public static final String DETAILED_INFO_BREWERY = "detailed_info_brewery";
     public static final String COORDINATES_BREWERIES_SEARCH = "coordinates_breweries_search";
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     @Override
     public void moveToDetails(BeerDetailedDescription beerDetailedDescription) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(DETAILED_INFO_BEER ,beerDetailedDescription);
+        bundle.putParcelable(DETAILED_INFO_BEER, beerDetailedDescription);
         navController.navigate(R.id.navigation_detailed_info_beer, bundle);
     }
 

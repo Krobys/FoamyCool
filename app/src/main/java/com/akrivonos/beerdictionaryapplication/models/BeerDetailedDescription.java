@@ -27,7 +27,7 @@ public class BeerDetailedDescription implements Parcelable {
     @ColumnInfo(name = "description")
     private String description;
 
-    public BeerDetailedDescription(){
+    public BeerDetailedDescription() {
 
     }
 
@@ -107,6 +107,7 @@ public class BeerDetailedDescription implements Parcelable {
     public void setIdInc(long idInc) {
         this.idInc = idInc;
     }
+
     @Override
     public int describeContents() {
         return 0;

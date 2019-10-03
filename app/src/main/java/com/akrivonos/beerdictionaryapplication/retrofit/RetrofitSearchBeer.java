@@ -69,7 +69,7 @@ public class RetrofitSearchBeer {
         return retrofitSearchDownload;
     }
 
-    public RetrofitSearchBeer setObserverBreweries(io.reactivex.Observer<ArrayList<BreweryDetailedDescription>> observer){
+    public RetrofitSearchBeer setObserverBreweries(io.reactivex.Observer<ArrayList<BreweryDetailedDescription>> observer) {
         breweryPublishSubject = PublishSubject.create();
         breweryPublishSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -78,7 +78,7 @@ public class RetrofitSearchBeer {
         return retrofitSearchDownload;
     }
 
-    public RetrofitSearchBeer setObserverPageSettingsAdapter(io.reactivex.Observer<PageSettingsDownloading> observer){
+    public RetrofitSearchBeer setObserverPageSettingsAdapter(io.reactivex.Observer<PageSettingsDownloading> observer) {
         pageSettingsDownloadingPublishSubject = PublishSubject.create();
         pageSettingsDownloadingPublishSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -92,16 +92,15 @@ public class RetrofitSearchBeer {
         Call<BeerModel> beerModelCall = apiService.searchBeerByName(SANDBOX_API_KEY, searchBeerName, typeRequestName, pageToLoad);
         beerModelCall.enqueue(new Callback<BeerModel>() {
             @Override
-            public void onResponse(@NonNull Call<BeerModel> call,@NonNull Response<BeerModel> response) {
-                Log.d("test", "onResponse: "+response.toString());
+            public void onResponse(@NonNull Call<BeerModel> call, @NonNull Response<BeerModel> response) {
+                Log.d("test", "onResponse: " + response.toString());
                 BeerModel beerModel = response.body();
-                if(beerPublishSubject.hasObservers())
-                    if(beerModel != null){
-                        if (response.code() == 200){
-                               beerPublishSubject.onNext(makeBeerListFromBeerModel(beerModel));
-                               pageSettingsDownloadingPublishSubject.onNext(makePageSettings(beerModel));
-                        }
-                        else{
+                if (beerPublishSubject.hasObservers())
+                    if (beerModel != null) {
+                        if (response.code() == 200) {
+                            beerPublishSubject.onNext(makeBeerListFromBeerModel(beerModel));
+                            pageSettingsDownloadingPublishSubject.onNext(makePageSettings(beerModel));
+                        } else {
                             beerPublishSubject.onNext(new ArrayList<>());
                         }
                     }
@@ -109,14 +108,14 @@ public class RetrofitSearchBeer {
 
             @Override
             public void onFailure(@NonNull Call<BeerModel> call, @NotNull Throwable t) {
-                if(beerPublishSubject.hasObservers())
+                if (beerPublishSubject.hasObservers())
                     beerPublishSubject.onNext(new ArrayList<>());
             }
 
         });
         if (lastProcess != null) {
-            if(!lastProcess.isExecuted())
-            lastProcess.cancel();
+            if (!lastProcess.isExecuted())
+                lastProcess.cancel();
         }
         lastProcess = beerModelCall;
         return retrofitSearchDownload;
@@ -131,15 +130,14 @@ public class RetrofitSearchBeer {
                 UNIT_SEARCH_MI);
         breweryModelCall.enqueue(new Callback<BreweryModel>() {
             @Override
-            public void onResponse(@NonNull Call<BreweryModel> call,@NonNull Response<BreweryModel> response) {
+            public void onResponse(@NonNull Call<BreweryModel> call, @NonNull Response<BreweryModel> response) {
                 Log.d("test", "+" + response.toString());
                 BreweryModel breweryModel = response.body();
-                if(breweryModel != null){
-                    if(breweryPublishSubject.hasObservers())
-                        if (response.code() == 200){
-                                breweryPublishSubject.onNext(makeBreweryListFromBreweryModel(breweryModel));
-                            }
-                        else{
+                if (breweryModel != null) {
+                    if (breweryPublishSubject.hasObservers())
+                        if (response.code() == 200) {
+                            breweryPublishSubject.onNext(makeBreweryListFromBreweryModel(breweryModel));
+                        } else {
                             breweryPublishSubject.onNext(new ArrayList<>());
                         }
                 }
@@ -147,7 +145,7 @@ public class RetrofitSearchBeer {
 
             @Override
             public void onFailure(@NonNull Call<BreweryModel> call, @NonNull Throwable t) {
-                if(breweryPublishSubject.hasObservers())
+                if (breweryPublishSubject.hasObservers())
                     breweryPublishSubject.onNext(new ArrayList<>());
 
             }
@@ -156,19 +154,18 @@ public class RetrofitSearchBeer {
         return retrofitSearchDownload;
     }
 
-    public RetrofitSearchBeer startDownloadBeersListInBrewery(String idBrewery){
+    public RetrofitSearchBeer startDownloadBeersListInBrewery(String idBrewery) {
         Call<BreweryBeersModel> breweryBeersModelCall = apiService.getBeersForBrewery(idBrewery, SANDBOX_API_KEY);
         breweryBeersModelCall.enqueue(new Callback<BreweryBeersModel>() {
             @Override
-            public void onResponse(@NonNull Call<BreweryBeersModel> call,@NonNull Response<BreweryBeersModel> response) {
+            public void onResponse(@NonNull Call<BreweryBeersModel> call, @NonNull Response<BreweryBeersModel> response) {
                 Log.d("test", "+" + response.toString());
                 BreweryBeersModel breweryBeersModel = response.body();
-                if(breweryBeersModel != null){
-                    if(beerPublishSubject.hasObservers())
-                        if (response.code() == 200){
-                                beerPublishSubject.onNext(makeBeerListFromBreweryBeersModel(breweryBeersModel));
-                        }
-                        else{
+                if (breweryBeersModel != null) {
+                    if (beerPublishSubject.hasObservers())
+                        if (response.code() == 200) {
+                            beerPublishSubject.onNext(makeBeerListFromBreweryBeersModel(breweryBeersModel));
+                        } else {
                             beerPublishSubject.onNext(new ArrayList<>());
                         }
                 }
@@ -176,7 +173,7 @@ public class RetrofitSearchBeer {
 
             @Override
             public void onFailure(@NonNull Call<BreweryBeersModel> call, @NonNull Throwable t) {
-                if(beerPublishSubject.hasObservers())
+                if (beerPublishSubject.hasObservers())
                     beerPublishSubject.onNext(new ArrayList<>());
             }
 
@@ -184,42 +181,42 @@ public class RetrofitSearchBeer {
         return retrofitSearchDownload;
     }
 
-    private ArrayList<BeerDetailedDescription> makeBeerListFromBeerModel(BeerModel beerModel){
+    private ArrayList<BeerDetailedDescription> makeBeerListFromBeerModel(BeerModel beerModel) {
         BeerDetailedDescription beerDetailedDescription;
         ArrayList<BeerDetailedDescription> beerList = new ArrayList<>();
         List<Datum> dataList = beerModel.getData();
-        if(dataList != null)
-        for (Datum datum: dataList){
-            beerDetailedDescription = new BeerDetailedDescription();
-            beerDetailedDescription.setId(datum.getId());
-            beerDetailedDescription.setNameBeer(datum.getName());
-            beerDetailedDescription.setCategoryBeer(datum.getStyle().getCategory().getName());
-            beerDetailedDescription.setDescription(datum.getStyle().getDescription());
-            Labels labels = datum.getLabels();
-            if(labels != null){
-                beerDetailedDescription.setIconBigUrl(datum.getLabels().getLarge());
-                beerDetailedDescription.setIconSmallUrl(datum.getLabels().getIcon());
+        if (dataList != null)
+            for (Datum datum : dataList) {
+                beerDetailedDescription = new BeerDetailedDescription();
+                beerDetailedDescription.setId(datum.getId());
+                beerDetailedDescription.setNameBeer(datum.getName());
+                beerDetailedDescription.setCategoryBeer(datum.getStyle().getCategory().getName());
+                beerDetailedDescription.setDescription(datum.getStyle().getDescription());
+                Labels labels = datum.getLabels();
+                if (labels != null) {
+                    beerDetailedDescription.setIconBigUrl(datum.getLabels().getLarge());
+                    beerDetailedDescription.setIconSmallUrl(datum.getLabels().getIcon());
+                }
+                beerList.add(beerDetailedDescription);
             }
-            beerList.add(beerDetailedDescription);
-        }
         return beerList;
     }
 
-    private ArrayList<BeerDetailedDescription> makeBeerListFromBreweryBeersModel(BreweryBeersModel breweryBeersModel){
+    private ArrayList<BeerDetailedDescription> makeBeerListFromBreweryBeersModel(BreweryBeersModel breweryBeersModel) {
         BeerDetailedDescription beerDetailedDescription;
         ArrayList<BeerDetailedDescription> beerList = new ArrayList<>();
         List<com.akrivonos.beerdictionaryapplication.pojo_models.beers_in_brewery_model.Datum> dataList = breweryBeersModel.getData();
-        if(dataList != null)
-            for (com.akrivonos.beerdictionaryapplication.pojo_models.beers_in_brewery_model.Datum datum: dataList){
+        if (dataList != null)
+            for (com.akrivonos.beerdictionaryapplication.pojo_models.beers_in_brewery_model.Datum datum : dataList) {
                 beerDetailedDescription = new BeerDetailedDescription();
                 beerDetailedDescription.setId(datum.getId());
                 beerDetailedDescription.setNameBeer(datum.getName());
                 Style style = datum.getStyle();
-                if(style!=null){
+                if (style != null) {
                     beerDetailedDescription.setCategoryBeer(style.getName());
                     beerDetailedDescription.setDescription(style.getDescription());
                     com.akrivonos.beerdictionaryapplication.pojo_models.beers_in_brewery_model.Labels labels = datum.getLabels();
-                    if(labels != null){
+                    if (labels != null) {
                         beerDetailedDescription.setIconBigUrl(datum.getLabels().getLarge());
                         beerDetailedDescription.setIconSmallUrl(datum.getLabels().getIcon());
                     }
@@ -229,18 +226,18 @@ public class RetrofitSearchBeer {
         return beerList;
     }
 
-    private ArrayList<BreweryDetailedDescription> makeBreweryListFromBreweryModel(BreweryModel breweryModel){
+    private ArrayList<BreweryDetailedDescription> makeBreweryListFromBreweryModel(BreweryModel breweryModel) {
         BreweryDetailedDescription breweryDetailedDescription;
         ArrayList<BreweryDetailedDescription> breweryList = new ArrayList<>();
         List<com.akrivonos.beerdictionaryapplication.pojo_models.brewery_model.Datum> dataList = breweryModel.getData();
-        if(dataList != null)
-            for (com.akrivonos.beerdictionaryapplication.pojo_models.brewery_model.Datum datum: dataList){
+        if (dataList != null)
+            for (com.akrivonos.beerdictionaryapplication.pojo_models.brewery_model.Datum datum : dataList) {
                 breweryDetailedDescription = new BreweryDetailedDescription();
                 breweryDetailedDescription.setNameBrewery(datum.getBrewery().getName());
                 breweryDetailedDescription.setDescriptionBrewery(datum.getBrewery().getDescription());
                 breweryDetailedDescription.setIdBrewery(datum.getBrewery().getId());
                 Images images = datum.getBrewery().getImages();
-                if(images != null){
+                if (images != null) {
                     breweryDetailedDescription.setIconSmallUrl(images.getIcon());
                     breweryDetailedDescription.setIconBigUrl(images.getLarge());
                 }
@@ -249,7 +246,7 @@ public class RetrofitSearchBeer {
         return breweryList;
     }
 
-    private PageSettingsDownloading makePageSettings(BeerModel beerModel){
+    private PageSettingsDownloading makePageSettings(BeerModel beerModel) {
         int currentPage = beerModel.getCurrentPage();
         int pagesAmount = beerModel.getNumberOfPages();
         return new PageSettingsDownloading(currentPage, pagesAmount);

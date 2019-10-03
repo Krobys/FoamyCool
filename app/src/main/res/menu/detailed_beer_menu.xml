@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/make_favorite_checker"
-        android:title="make favorite"
+        android:title="@string/make_favorite"
         app:showAsAction="always"
         android:icon="@drawable/ic_star_border_black_24dp"/>
 </menu>

@@ -40,6 +40,10 @@ import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private final static int MY_MAP_PERMISSION_CODE = 12;
+    private static final String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
     private GoogleMap map;
     private MapCoordinatesBreweryListener mapCoordinatesBreweryListener;
     private BottomNavigationHideListener bottomNavigationHideListener;
@@ -48,32 +52,27 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private Button chooseButton;
     private Disposable searchOnMapDis;
 
-    private static final String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-    };
+    public MapSearchFragment() {
+        // Required empty public constructor
+    }
 
     private boolean checkPermissionsMap() {
         Activity activity = getActivity();
-        if(activity != null)
-        if (checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, MY_MAP_PERMISSION_CODE);
-        } else {
-            return true;
-        }
+        if (activity != null)
+            if (checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, MY_MAP_PERMISSION_CODE);
+            } else {
+                return true;
+            }
         return false;
-    }
-
-    public MapSearchFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
-        if(activity != null){
+        if (activity != null) {
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
             mapCoordinatesBreweryListener = (MapCoordinatesBreweryListener) activity;
             topBarHideListener = (TopBarHideListener) activity;
@@ -99,12 +98,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
             supportMapFragment.getMapAsync(this);
         }
         Context context = getContext();
-        if(context != null)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        if (context != null)
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         return view;
     }
 
-    private void setUpScreen(){
+    private void setUpScreen() {
         topBarHideListener.hideToolbar();
         bottomNavigationHideListener.showBottomNavMenu();
     }
@@ -123,9 +122,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
                     LatLng latLng = googleMap.getCameraPosition().target;
                     mapCoordinatesBreweryListener.setResultCoordinatesSearchBreweries(latLng);
                 });
-       if(checkPermissionsMap()){
-           enableOwnLocation();
-       }
+        if (checkPermissionsMap()) {
+            enableOwnLocation();
+        }
     }
 
     @Override
@@ -141,7 +140,7 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @SuppressLint("MissingPermission")
-    private void enableOwnLocation(){
+    private void enableOwnLocation() {
         map.setMyLocationEnabled(true);
         getCurrentLocation();
     }
@@ -150,9 +149,9 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     private void getCurrentLocation() {
         boolean enabled = false;
         Activity activity = getActivity();
-        if(activity != null) {
+        if (activity != null) {
             LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-            if (locationManager != null){
+            if (locationManager != null) {
                 enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             }
         }

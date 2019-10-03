@@ -13,7 +13,7 @@ public class BreweryDetailedDescription implements Parcelable {
     private String nameBrewery;
     private String descriptionBrewery;
 
-    public BreweryDetailedDescription(){
+    public BreweryDetailedDescription() {
 
     }
 

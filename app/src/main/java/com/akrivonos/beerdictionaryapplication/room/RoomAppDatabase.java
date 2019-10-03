@@ -16,13 +16,13 @@ public abstract class RoomAppDatabase extends RoomDatabase {
 
     public abstract FavoriteBeerDao favoriteBeerDao();
 
-        public static RoomAppDatabase getDatabase(Context context){
-            if(roomAppDatabase == null){
-                roomAppDatabase = Room.databaseBuilder(context, RoomAppDatabase.class, DATABASE_NAME)
-                        .allowMainThreadQueries()
-                        .fallbackToDestructiveMigration()
-                        .build();
-            }
-            return roomAppDatabase;
+    public static RoomAppDatabase getDatabase(Context context) {
+        if (roomAppDatabase == null) {
+            roomAppDatabase = Room.databaseBuilder(context, RoomAppDatabase.class, DATABASE_NAME)
+                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
+        return roomAppDatabase;
+    }
 }

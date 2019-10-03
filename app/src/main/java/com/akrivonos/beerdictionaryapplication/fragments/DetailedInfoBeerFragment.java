@@ -51,7 +51,7 @@ public class DetailedInfoBeerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Activity activity = getActivity();
-        if(activity != null){
+        if (activity != null) {
             moveBackListener = (MoveBackListener) getActivity();
             bottomNavigationHideListener = (BottomNavigationHideListener) getActivity();
             appDatabase = RoomAppDatabase.getDatabase(activity);
@@ -85,26 +85,26 @@ public class DetailedInfoBeerFragment extends Fragment {
         disposeAll();
     }
 
-    private void disposeAll(){
+    private void disposeAll() {
         checkIsFavoriteBeerDisposable.dispose();
     }
 
-    private void setUpBeerInformation(){
+    private void setUpBeerInformation() {
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             BeerDetailedDescription beerDetailedDescription = bundle.getParcelable(DETAILED_INFO_BEER);
-            if(beerDetailedDescription != null){
+            if (beerDetailedDescription != null) {
                 beerDeatils = beerDetailedDescription;
-                if(beerDetailedDescription.getIconBigUrl() != null)
-                Glide.with(imageBeer)
-                        .load(beerDetailedDescription.getIconBigUrl())
-                        .into(imageBeer);
+                if (beerDetailedDescription.getIconBigUrl() != null)
+                    Glide.with(imageBeer)
+                            .load(beerDetailedDescription.getIconBigUrl())
+                            .into(imageBeer);
                 categoryBeerTextView.setText(beerDetailedDescription.getCategoryBeer());
                 detailedInfoBeer.setText(beerDetailedDescription.getDescription());
                 AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-                if(appCompatActivity != null){
+                if (appCompatActivity != null) {
                     ActionBar actionBar = appCompatActivity.getSupportActionBar();
-                    if(actionBar != null){
+                    if (actionBar != null) {
                         actionBar.setTitle(beerDetailedDescription.getNameBeer());
                     }
                 }
@@ -118,7 +118,7 @@ public class DetailedInfoBeerFragment extends Fragment {
         inflater.inflate(R.menu.detailed_beer_menu, menu);
         setUpActionBar();
         String uniqueIdBeer = beerDeatils.getId();
-        Log.d("test", "onCreateOptionsMenu: uniq id = "+uniqueIdBeer);
+        Log.d("test", "onCreateOptionsMenu: uniq id = " + uniqueIdBeer);
         MenuItem favoriteItem = menu.findItem(R.id.make_favorite_checker);
         checkIsFavoriteBeerSetter(uniqueIdBeer, favoriteItem);
         super.onCreateOptionsMenu(menu, inflater);
@@ -127,7 +127,7 @@ public class DetailedInfoBeerFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 moveBackListener.moveBack();
                 break;
@@ -138,11 +138,11 @@ public class DetailedInfoBeerFragment extends Fragment {
         return false;
     }
 
-    private void setUpActionBar(){
+    private void setUpActionBar() {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        if(appCompatActivity != null){
+        if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();
-            if(actionBar != null){
+            if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayShowTitleEnabled(true);
@@ -150,14 +150,14 @@ public class DetailedInfoBeerFragment extends Fragment {
         }
     }
 
-    private void switchFavoriteState(){
+    private void switchFavoriteState() {
         String uniqueBeerId = beerDeatils.getId();
-        if(isBeerFavorite){
+        if (isBeerFavorite) {
             appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe();
-        }else{
+        } else {
             appDatabase.favoriteBeerDao().setBeerFavorite(beerDeatils)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
@@ -165,14 +165,14 @@ public class DetailedInfoBeerFragment extends Fragment {
         }
     }
 
-    private void checkIsFavoriteBeerSetter(String uniqueId, MenuItem favoriteItem){
+    private void checkIsFavoriteBeerSetter(String uniqueId, MenuItem favoriteItem) {
         checkIsFavoriteBeerDisposable = appDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
-                            Log.d("test", "checkIsFavoriteBeerSetter: subscribe");
+                    Log.d("test", "checkIsFavoriteBeerSetter: subscribe");
                     isBeerFavorite = (o.size() != 0);
-                    favoriteItem.setIcon((isBeerFavorite) ?  R.drawable.ic_star_black_24dp : R.drawable.ic_star_border_black_24dp );
+                    favoriteItem.setIcon((isBeerFavorite) ? R.drawable.ic_star_black_24dp : R.drawable.ic_star_border_black_24dp);
                 });
     }
 }

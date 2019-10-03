@@ -59,7 +59,7 @@ public class FavoriteBeerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
-        if(activity != null){
+        if (activity != null) {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
             beerNameAdapterFavorites = new BeerNameAdapter(activity, moveToDetailsBeerListener);
             moveBackListener = (MoveBackListener) activity;
@@ -81,11 +81,11 @@ public class FavoriteBeerFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(favoritesBeerList -> {
-                    if(favoritesBeerList.size() > 0){
+                    if (favoritesBeerList.size() > 0) {
                         beerNameAdapterFavorites.setData(favoritesBeerList);
                         beerNameAdapterFavorites.notifyDataSetChanged();
                         emptyMessage.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         emptyMessage.setVisibility(View.VISIBLE);
                     }
 
@@ -100,15 +100,15 @@ public class FavoriteBeerFragment extends Fragment {
         disposeAll();
     }
 
-    private void disposeAll(){
+    private void disposeAll() {
         favoritesBeerDisposable.dispose();
     }
 
-    private void setUpActionBar(){
+    private void setUpActionBar() {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        if(appCompatActivity != null){
+        if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();
-            if(actionBar != null){
+            if (actionBar != null) {
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setTitle("Favorite Beer");
             }
@@ -122,7 +122,7 @@ public class FavoriteBeerFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             moveBackListener.moveBack();
             return true;
         }

@@ -23,24 +23,24 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
     private final LayoutInflater layoutInflater;
     private final MoveToDetailsBreweryListener moveToDetailsBreweryListener;
 
-    public void setData(List<BreweryDetailedDescription> breweryList){
-        this.breweryList = breweryList;
-    }
-
-    public void addData(List<BreweryDetailedDescription> breweryList){
-        this.breweryList.addAll(breweryList);
-    }
-
-    public void throwOffData(){
-        breweryList.clear();
-    }
-
-    public BreweryAdapter(Context context, MoveToDetailsBreweryListener moveToDetailsBreweryListener){
+    public BreweryAdapter(Context context, MoveToDetailsBreweryListener moveToDetailsBreweryListener) {
         layoutInflater = LayoutInflater.from(context);
         this.moveToDetailsBreweryListener = moveToDetailsBreweryListener;
     }
 
-    public boolean isSetted(){
+    public void setData(List<BreweryDetailedDescription> breweryList) {
+        this.breweryList = breweryList;
+    }
+
+    public void addData(List<BreweryDetailedDescription> breweryList) {
+        this.breweryList.addAll(breweryList);
+    }
+
+    public void throwOffData() {
+        breweryList.clear();
+    }
+
+    public boolean isSetted() {
         return breweryList.size() > 0;
     }
 
@@ -54,9 +54,9 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
     @Override
     public void onBindViewHolder(@NonNull BreweryViewHolder holder, int position) {
         BreweryDetailedDescription breweryDetailedDescription = breweryList.get(position);
-        holder.breweryDetailedDescription  = breweryDetailedDescription;
+        holder.breweryDetailedDescription = breweryDetailedDescription;
         holder.nameBrewery.setText(breweryDetailedDescription.getNameBrewery());
-        if(breweryDetailedDescription.getIconSmallUrl() != null){
+        if (breweryDetailedDescription.getIconSmallUrl() != null) {
             Glide.with(holder.imageBrewery)
                     .load(breweryDetailedDescription.getIconSmallUrl())
                     .into(holder.imageBrewery);
@@ -75,7 +75,7 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
 
         BreweryViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView.setOnClickListener(v->moveToDetailsBreweryListener.moveToDetails(breweryDetailedDescription));
+            itemView.setOnClickListener(v -> moveToDetailsBreweryListener.moveToDetails(breweryDetailedDescription));
             imageBrewery = itemView.findViewById(R.id.image_brewery);
             nameBrewery = itemView.findViewById(R.id.name_brewery);
         }

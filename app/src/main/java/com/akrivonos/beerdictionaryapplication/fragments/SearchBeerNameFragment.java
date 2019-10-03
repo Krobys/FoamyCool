@@ -38,7 +38,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public class SearchBeerNameFragment extends Fragment{
+public class SearchBeerNameFragment extends Fragment {
 
     public final static String TYPE_BEER = "beer";
 
@@ -57,11 +57,11 @@ public class SearchBeerNameFragment extends Fragment{
 
         @Override
         public void onNext(ArrayList<BeerDetailedDescription> beerModels) {
-            if(beerModels.size() != 0) {
+            if (beerModels.size() != 0) {
                 emptyMessage.setVisibility(View.GONE);
                 beerNameAdapter.addData(beerModels);
                 beerNameAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "No Data", Toast.LENGTH_SHORT).show();
             }
             progressBar.setVisibility(View.GONE);
@@ -81,20 +81,20 @@ public class SearchBeerNameFragment extends Fragment{
         // Required empty public constructor
     }
 
-    private void disposeAll(){
+    private void disposeAll() {
         observerBeerDisposable.dispose();
         searchViewDisposable.dispose();
         beerNameAdapter.disposePageObserver();
     }
 
-    private void makeObservers(){
+    private void makeObservers() {
         RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Activity activity = getActivity();
-        if(activity != null){
+        if (activity != null) {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
             beerNameAdapter = new BeerNameAdapter(activity, moveToDetailsBeerListener);
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
@@ -125,11 +125,11 @@ public class SearchBeerNameFragment extends Fragment{
         disposeAll();
     }
 
-    private void setUpScreen(){
+    private void setUpScreen() {
         bottomNavigationHideListener.showBottomNavMenu();
-        if(beerNameAdapter.getItemCount() == 0){
+        if (beerNameAdapter.getItemCount() == 0) {
             emptyMessage.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             emptyMessage.setVisibility(View.GONE);
         }
     }
@@ -142,7 +142,7 @@ public class SearchBeerNameFragment extends Fragment{
         searchViewDisposable = RxSearchView.queryTextChangeEvents(searchView)
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .map(o -> o.getQueryText().toString())
-                .filter(searchText -> searchText.length() > 3 && !TextUtils.isEmpty(searchText))
+                .filter(searchText -> searchText.length() > 2 && !TextUtils.isEmpty(searchText))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchText -> {
                     progressBar.setVisibility(View.VISIBLE);
@@ -151,9 +151,9 @@ public class SearchBeerNameFragment extends Fragment{
                 });
         searchView.setIconified(beerNameAdapter.isSetted());
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        if(appCompatActivity != null){
+        if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();
-            if(actionBar != null){
+            if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(false);
                 actionBar.setDisplayShowHomeEnabled(false);
                 actionBar.setDisplayShowTitleEnabled(false);

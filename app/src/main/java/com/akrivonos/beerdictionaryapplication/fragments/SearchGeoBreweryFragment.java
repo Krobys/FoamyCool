@@ -52,12 +52,12 @@ public class SearchGeoBreweryFragment extends Fragment {
 
         @Override
         public void onNext(ArrayList<BreweryDetailedDescription> beerModels) {
-            if(beerModels.size() != 0) {
+            if (beerModels.size() != 0) {
                 breweryAdapter.setData(beerModels);
                 breweryAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 noBreweriesMessage.setVisibility(View.VISIBLE);
-                noBreweriesMessage.setOnClickListener(v->moveBackListener.moveBack());
+                noBreweriesMessage.setOnClickListener(v -> moveBackListener.moveBack());
             }
             progressBar.setVisibility(View.GONE);
         }
@@ -76,12 +76,13 @@ public class SearchGeoBreweryFragment extends Fragment {
     public SearchGeoBreweryFragment() {
         // Required empty public constructor
     }
+
     //
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Activity activity = getActivity();
-        if(activity != null){
+        if (activity != null) {
             MoveToDetailsBreweryListener moveToDetailsBreweryListener = (MoveToDetailsBreweryListener) activity;
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
             moveBackListener = (MoveBackListener) activity;
@@ -105,8 +106,8 @@ public class SearchGeoBreweryFragment extends Fragment {
         return view;
     }
 
-    private void setUpScreen(){
-        if(breweryAdapter.isSetted()){
+    private void setUpScreen() {
+        if (breweryAdapter.isSetted()) {
             progressBar.setVisibility(View.GONE);
         }
         bottomNavigationHideListener.hideBottomNavMenu();
@@ -118,17 +119,17 @@ public class SearchGeoBreweryFragment extends Fragment {
         disposeObservers();
     }
 
-    private void disposeObservers(){
+    private void disposeObservers() {
         observerBreweryDisposable.dispose();
     }
 
-    private void makeObservers(){
+    private void makeObservers() {
         RetrofitSearchBeer.getInstance().setObserverBreweries(observerBrewery);
     }
 
-    private void startLoadingInformation(){
+    private void startLoadingInformation() {
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             LatLng coordinatesBreweries = bundle.getParcelable(COORDINATES_BREWERIES_SEARCH);
             RetrofitSearchBeer.getInstance().startDownloadBreweryList(coordinatesBreweries);
         }
@@ -137,9 +138,9 @@ public class SearchGeoBreweryFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        if(appCompatActivity != null){
+        if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();
-            if(actionBar != null){
+            if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayShowTitleEnabled(true);
@@ -152,7 +153,7 @@ public class SearchGeoBreweryFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             moveBackListener.moveBack();
             return true;
         }

@@ -6,4 +6,14 @@
     <string name="GOOGLE_MAP_API_KEY">AIzaSyDfTnx4fBnXnoqUlX4tszr41XJrCh8kJ1E</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="beers">Beers:</string>
+    <string name="beer_name">Beer Name</string>
+    <string name="search">Search</string>
+    <string name="breweries">Breweries</string>
+    <string name="favorite_beer">Favorite Beer</string>
+    <string name="make_favorite">make favorite</string>
+    <string name="enter_your_search_query_nto_search_for_beers_above">Enter your search query  to search for beers above</string>
+    <string name="your_favorite_beer_list_is_empty">Your favorite beer list is empty!</string>
+    <string name="find_breweries_on_map">Find breweries on map</string>
+    <string name="no_beers_found_for_this_brewery_nwe_are_sorry">No beers found for this brewery! We are sorry</string>
+    <string name="no_breweries_found_ntry_again">No breweries found! Try again</string>
 </resources>

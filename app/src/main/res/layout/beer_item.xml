@@ -22,8 +22,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="42dp"
         android:layout_toStartOf="@+id/imageView2"
-        android:layout_toEndOf="@+id/icon_beer"
-        android:text="TextView" />
+        android:layout_toEndOf="@+id/icon_beer" />
 
     <ImageView
         android:id="@+id/imageView2"

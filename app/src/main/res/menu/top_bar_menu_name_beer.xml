@@ -5,9 +5,10 @@
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
+        android:imeOptions="actionSearch"
         android:focusable = "false"
         app:showAsAction="always"
+        android:title="@string/search"
         app:actionViewClass="android.widget.SearchView" />
 
 </menu>

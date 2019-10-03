@@ -53,10 +53,10 @@ public class DetailedInfoBreweryFragment extends Fragment {
 
         @Override
         public void onNext(ArrayList<BeerDetailedDescription> beerModels) {
-            if(beerModels.size() != 0) {
+            if (beerModels.size() != 0) {
                 beerNameAdapter.setData(beerModels);
                 beerNameAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 noBeerMessage.setVisibility(View.VISIBLE);
             }
             progressBar.setVisibility(View.GONE);
@@ -80,15 +80,15 @@ public class DetailedInfoBreweryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        if(bundle!= null){
+        if (bundle != null) {
             BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);
-            if(breweryDetailedDescription != null){
+            if (breweryDetailedDescription != null) {
                 String idBrewery = breweryDetailedDescription.getIdBrewery();
                 startLoadBeerData(idBrewery);
             }
         }
         Activity activity = getActivity();
-        if(activity != null){
+        if (activity != null) {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
             beerNameAdapter = new BeerNameAdapter(activity, moveToDetailsBeerListener);
             moveBackListener = (MoveBackListener) activity;
@@ -120,48 +120,48 @@ public class DetailedInfoBreweryFragment extends Fragment {
         disposeAll();
     }
 
-    private void makeObservers(){
+    private void makeObservers() {
         RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
     }
 
-    private void disposeAll(){
+    private void disposeAll() {
         observerBeerDisposable.dispose();
     }
 
-    private void startLoadBeerData(String idBrewery){
+    private void startLoadBeerData(String idBrewery) {
         RetrofitSearchBeer.getInstance().startDownloadBeersListInBrewery(idBrewery);
     }
 
-    private void setUpScreen(){
+    private void setUpScreen() {
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);
-            if(breweryDetailedDescription != null){
-                if(breweryDetailedDescription.getIconBigUrl() != null){
+            if (breweryDetailedDescription != null) {
+                if (breweryDetailedDescription.getIconBigUrl() != null) {
                     Glide.with(imageBrewery)
                             .load(breweryDetailedDescription.getIconBigUrl())
                             .into(imageBrewery);
                 }
                 String description = breweryDetailedDescription.getDescriptionBrewery();
-                if(description != null)
-                descriptionBrewery.setText((!description.equals("")) ? description: breweryDetailedDescription.getNameBrewery());
+                if (description != null)
+                    descriptionBrewery.setText((!description.equals("")) ? description : breweryDetailedDescription.getNameBrewery());
                 AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-                if(appCompatActivity != null){
+                if (appCompatActivity != null) {
                     ActionBar actionBar = appCompatActivity.getSupportActionBar();
-                    if(actionBar != null){
+                    if (actionBar != null) {
                         actionBar.setTitle(breweryDetailedDescription.getNameBrewery());
                     }
                 }
             }
         }
-        if(beerNameAdapter.isSetted()){
+        if (beerNameAdapter.isSetted()) {
             progressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             moveBackListener.moveBack();
             return true;
         }

@@ -34,7 +34,7 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
     private String beerTypeName;
     private final LayoutInflater layoutInflater;
 
-    public BeerNameAdapter(Context context, MoveToDetailsBeerListener moveToDetailsBeerListener){
+    public BeerNameAdapter(Context context, MoveToDetailsBeerListener moveToDetailsBeerListener) {
         this.moveToDetailsBeerListener = moveToDetailsBeerListener;
         layoutInflater = LayoutInflater.from(context);
         Observer<PageSettingsDownloading> pageSettingsDownloadingObserver = new Observer<PageSettingsDownloading>() {
@@ -60,27 +60,28 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         RetrofitSearchBeer.getInstance().setObserverPageSettingsAdapter(pageSettingsDownloadingObserver);
     }
 
-    public void disposePageObserver(){
+    public void disposePageObserver() {
         disposablePageSettings.dispose();
     }
 
-    public void setData(List<BeerDetailedDescription> beerList){
+    public void setData(List<BeerDetailedDescription> beerList) {
         beerTypesList = beerList;
     }
 
-    public void addData(List<BeerDetailedDescription> beerList){
+    public void addData(List<BeerDetailedDescription> beerList) {
         String addedBeerName = beerList.get(0).getNameBeer();
-        if(beerList.size() != 0 && !addedBeerName.equals(beerTypeName)){
+        if (beerList.size() != 0 && !addedBeerName.equals(beerTypeName)) {
             beerTypesList.clear();
             beerTypeName = addedBeerName;
         }
         beerTypesList.addAll(beerList);
     }
 
-    public BeerDetailedDescription getItem(int position){
+    public BeerDetailedDescription getItem(int position) {
         return beerTypesList.get(position);
     }
-    public boolean isSetted(){
+
+    public boolean isSetted() {
         return beerTypesList.size() > 0;
     }
 
@@ -96,21 +97,21 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         BeerDetailedDescription detailsBeer = beerTypesList.get(position);
         holder.beerDetailedDescription = detailsBeer;
         holder.nameBeerTextView.setText(detailsBeer.getNameBeer());
-        if(detailsBeer.getIconSmallUrl() != null)
-        Glide.with(holder.iconBeerImageView)
+        if (detailsBeer.getIconSmallUrl() != null)
+            Glide.with(holder.iconBeerImageView)
                     .load(detailsBeer.getIconSmallUrl())
                     .into(holder.iconBeerImageView);
     }
 
     @Override
     public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
-        Log.d("test", "onViewAttachedToWindow: "+holder.getAdapterPosition());
-        if(holder.getAdapterPosition() + 3 == beerTypesList.size()){
-            if(pageSettingsDownloadingAdapter != null){
+        Log.d("test", "onViewAttachedToWindow: " + holder.getAdapterPosition());
+        if (holder.getAdapterPosition() + 3 == beerTypesList.size()) {
+            if (pageSettingsDownloadingAdapter != null) {
                 int currentPage = pageSettingsDownloadingAdapter.getCurrentPage();
                 int pagesAmount = pageSettingsDownloadingAdapter.getPagesAmount();
-                if(currentPage < pagesAmount)
-                    RetrofitSearchBeer.getInstance().startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage()+1);
+                if (currentPage < pagesAmount)
+                    RetrofitSearchBeer.getInstance().startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage() + 1);
             }
         }
         super.onViewAttachedToWindow(holder);
