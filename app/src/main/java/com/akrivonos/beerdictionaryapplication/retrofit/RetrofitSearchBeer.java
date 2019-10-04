@@ -1,7 +1,5 @@
 package com.akrivonos.beerdictionaryapplication.retrofit;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
@@ -71,7 +69,6 @@ public class RetrofitSearchBeer {
     }
 
     public RetrofitSearchBeer setObserverBreweries(io.reactivex.Observer<ArrayList<BreweryDetailedDescription>> observer) {
-        Log.d("test", "setObserverBreweries: ");
         breweryPublishSubject = BehaviorSubject.create();
         breweryPublishSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -123,7 +120,6 @@ public class RetrofitSearchBeer {
     }
 
     public RetrofitSearchBeer startDownloadBreweryList(LatLng coordinatesForSearch) {
-        Log.d("test", "startDownloadBreweryList: ");
         Call<BreweryModel> breweryModelCall = apiService.searchBreweriesByCoordinate(SANDBOX_API_KEY,
                 coordinatesForSearch.latitude,
                 coordinatesForSearch.longitude,
@@ -136,7 +132,6 @@ public class RetrofitSearchBeer {
                 if (breweryModel != null) {
                     if (breweryPublishSubject.hasObservers())
                         if (response.code() == 200) {
-                            Log.d("test", "onResponse: ");
                             breweryPublishSubject.onNext(makeBreweryListFromBreweryModel(breweryModel));
                         } else {
                             breweryPublishSubject.onNext(new ArrayList<>());

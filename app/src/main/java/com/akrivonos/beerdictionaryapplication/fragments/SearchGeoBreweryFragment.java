@@ -3,7 +3,6 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -133,7 +132,6 @@ public class SearchGeoBreweryFragment extends Fragment {
     }
 
     private void startLoadingInformation() {
-        Log.d("test", "startLoadingInformation: ");
         Bundle bundle = getArguments();
         if (bundle != null) {
             LatLng coordinatesBreweries = bundle.getParcelable(COORDINATES_BREWERIES_SEARCH);
