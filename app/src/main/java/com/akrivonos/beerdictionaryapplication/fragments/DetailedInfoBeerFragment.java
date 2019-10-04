@@ -117,7 +117,7 @@ public class DetailedInfoBeerFragment extends Fragment {
         setUpActionBar();
         String uniqueIdBeer = beerDetails.getId();
         MenuItem favoriteItem = menu.findItem(R.id.make_favorite_checker);
-        checkIsFavoriteBeerSetter(uniqueIdBeer, favoriteItem); // подписываемся на базу
+        checkIsFavoriteBeerObserver(uniqueIdBeer, favoriteItem); // подписываемся на базу
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -162,13 +162,15 @@ public class DetailedInfoBeerFragment extends Fragment {
         }
     }
 
-    private void checkIsFavoriteBeerSetter(String uniqueId, MenuItem favoriteItem) { //подписываемся на базу данных и слушаем изменение состояния
+    private void checkIsFavoriteBeerObserver(String uniqueId, MenuItem favoriteItem) { //подписываемся на базу данных и слушаем изменение состояния
         checkIsFavoriteBeerDisposable = appDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(o -> {
                     isBeerFavorite = (o.size() != 0);
-                    favoriteItem.setIcon((isBeerFavorite) ? R.drawable.ic_star_black_24dp : R.drawable.ic_star_border_black_24dp);
+                    favoriteItem.setIcon((isBeerFavorite)
+                            ? R.drawable.ic_star_black_24dp
+                            : R.drawable.ic_star_border_black_24dp);
                 });
     }
 }
