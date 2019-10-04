@@ -45,7 +45,7 @@ public class DetailedInfoBreweryFragment extends Fragment {
     private ProgressBar progressBar;
     private ConstraintLayout noBeerMessage;
 
-    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
+    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() { // observer for retrofit
         @Override
         public void onSubscribe(Disposable d) {
             observerBeerDisposable = d;
@@ -79,14 +79,11 @@ public class DetailedInfoBreweryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);
-            if (breweryDetailedDescription != null) {
-                String idBrewery = breweryDetailedDescription.getIdBrewery();
-                startLoadBeerData(idBrewery);
-            }
-        }
+        startLoadBreweryBeerListData();
+        setUpAdapterAndListeners();
+    }
+
+    private void setUpAdapterAndListeners() {
         Activity activity = getActivity();
         if (activity != null) {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
@@ -95,11 +92,30 @@ public class DetailedInfoBreweryFragment extends Fragment {
         }
     }
 
+    private void startLoadBreweryBeerListData() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);
+            if (breweryDetailedDescription != null) {
+                String idBrewery = breweryDetailedDescription.getIdBrewery();
+                RetrofitSearchBeer.getInstance().startDownloadBeersListInBrewery(idBrewery);
+            }
+        }
+    }
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_brewery, container, false);
         setHasOptionsMenu(true);
+        setUpScreenAndValues(view);
+        setUpBreweryInformation();
+        makeObservers();
+        return view;
+    }
+
+    private void setUpScreenAndValues(View view) {
         RecyclerView recyclerViewBeers = view.findViewById(R.id.recycler_view_beers_in_brewery);
         recyclerViewBeers.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewBeers.setAdapter(beerNameAdapter);
@@ -108,10 +124,6 @@ public class DetailedInfoBreweryFragment extends Fragment {
         imageBrewery = view.findViewById(R.id.image_brewery);
         descriptionBrewery = view.findViewById(R.id.description_brewery);
         progressBar = view.findViewById(R.id.progressBarBeer);
-
-        makeObservers();
-        setUpScreen();
-        return view;
     }
 
     @Override
@@ -128,11 +140,7 @@ public class DetailedInfoBreweryFragment extends Fragment {
         observerBeerDisposable.dispose();
     }
 
-    private void startLoadBeerData(String idBrewery) {
-        RetrofitSearchBeer.getInstance().startDownloadBeersListInBrewery(idBrewery);
-    }
-
-    private void setUpScreen() {
+    private void setUpBreweryInformation() { // устанавливаем информацию о пивоварне
         Bundle bundle = getArguments();
         if (bundle != null) {
             BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);

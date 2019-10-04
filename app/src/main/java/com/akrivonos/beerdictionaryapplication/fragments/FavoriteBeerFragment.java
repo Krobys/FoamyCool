@@ -63,6 +63,10 @@ public class FavoriteBeerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpAdapterAndListeners();
+    }
+
+    private void setUpAdapterAndListeners() {
         Activity activity = getActivity();
         if (activity != null) {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
@@ -77,11 +81,21 @@ public class FavoriteBeerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_beer, container, false);
         setHasOptionsMenu(true);
+        setUpScreenAndValues(view);
+        makeObserverDatabaseFavorites();
+        setUpActionBar();
+        return view;
+    }
+
+    private void setUpScreenAndValues(View view) {
         RecyclerView recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
+        emptyMessage = view.findViewById(R.id.empty_data_message);
         recyclerViewFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewFavorite.setAdapter(beerNameAdapterFavorites);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewFavorite);
-        emptyMessage = view.findViewById(R.id.empty_data_message);
+    }
+
+    private void makeObserverDatabaseFavorites() {
         favoritesBeerDisposable = appDatabase.favoriteBeerDao().getFavoritesBeer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -95,8 +109,6 @@ public class FavoriteBeerFragment extends Fragment {
                     }
 
                 });
-        setUpActionBar();
-        return view;
     }
 
     @Override

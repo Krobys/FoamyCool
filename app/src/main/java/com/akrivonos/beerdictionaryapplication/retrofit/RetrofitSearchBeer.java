@@ -1,5 +1,7 @@
 package com.akrivonos.beerdictionaryapplication.retrofit;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,8 +35,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitSearchBeer {
 
     private Call lastProcess;
-    private PublishSubject<ArrayList<BeerDetailedDescription>> beerPublishSubject;
-    private PublishSubject<ArrayList<BreweryDetailedDescription>> breweryPublishSubject;
+    private BehaviorSubject<ArrayList<BeerDetailedDescription>> beerPublishSubject;
+    private BehaviorSubject<ArrayList<BreweryDetailedDescription>> breweryPublishSubject;
     private PublishSubject<PageSettingsDownloading> pageSettingsDownloadingPublishSubject;
     private final static String SANDBOX_API_KEY = "14bac69989f93ce2755e0830d3a5c851";
     private final static String BASE_URL = "https://sandbox-api.brewerydb.com/v2/";
@@ -59,7 +62,7 @@ public class RetrofitSearchBeer {
     }
 
     public RetrofitSearchBeer setObserverBeerNames(io.reactivex.Observer<ArrayList<BeerDetailedDescription>> observer) {
-        beerPublishSubject = PublishSubject.create();
+        beerPublishSubject = BehaviorSubject.create();
         beerPublishSubject
                 .subscribeOn(AndroidSchedulers.mainThread())//ПРОВЕРИТЬ
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,7 +71,8 @@ public class RetrofitSearchBeer {
     }
 
     public RetrofitSearchBeer setObserverBreweries(io.reactivex.Observer<ArrayList<BreweryDetailedDescription>> observer) {
-        breweryPublishSubject = PublishSubject.create();
+        Log.d("test", "setObserverBreweries: ");
+        breweryPublishSubject = BehaviorSubject.create();
         breweryPublishSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -119,7 +123,7 @@ public class RetrofitSearchBeer {
     }
 
     public RetrofitSearchBeer startDownloadBreweryList(LatLng coordinatesForSearch) {
-
+        Log.d("test", "startDownloadBreweryList: ");
         Call<BreweryModel> breweryModelCall = apiService.searchBreweriesByCoordinate(SANDBOX_API_KEY,
                 coordinatesForSearch.latitude,
                 coordinatesForSearch.longitude,
@@ -132,6 +136,7 @@ public class RetrofitSearchBeer {
                 if (breweryModel != null) {
                     if (breweryPublishSubject.hasObservers())
                         if (response.code() == 200) {
+                            Log.d("test", "onResponse: ");
                             breweryPublishSubject.onNext(makeBreweryListFromBreweryModel(breweryModel));
                         } else {
                             breweryPublishSubject.onNext(new ArrayList<>());

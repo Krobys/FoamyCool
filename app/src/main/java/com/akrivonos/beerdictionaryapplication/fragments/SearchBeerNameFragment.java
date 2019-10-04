@@ -51,7 +51,7 @@ public class SearchBeerNameFragment extends Fragment {
     private LinearLayout emptyMessage;
     private BottomNavigationHideListener bottomNavigationHideListener;
 
-    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {
+    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() {//observer beer for retrofit
         @Override
         public void onSubscribe(Disposable d) {
             observerBeerDisposable = d;
@@ -95,13 +95,17 @@ public class SearchBeerNameFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        setUpAdapterAndListeners();
+        super.onCreate(savedInstanceState);
+    }
+
+    private void setUpAdapterAndListeners() {
         Activity activity = getActivity();
         if (activity != null) {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
             beerNameAdapter = new BeerNameAdapter(activity, moveToDetailsBeerListener);
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
         }
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -109,15 +113,8 @@ public class SearchBeerNameFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_beer_name, container, false);
         setHasOptionsMenu(true);
-        progressBar = view.findViewById(R.id.progressBarBeer);
-
-        emptyMessage = view.findViewById(R.id.empty_data_message);
-        RecyclerView beerNameRecyclerView = view.findViewById(R.id.beer_name_recycle_view);
-        beerNameRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        beerNameRecyclerView.setAdapter(beerNameAdapter);
-
+        setUpScreenAndValues(view);
         makeObservers();
-        setUpScreen();
         return view;
     }
 
@@ -127,7 +124,14 @@ public class SearchBeerNameFragment extends Fragment {
         disposeAll();
     }
 
-    private void setUpScreen() {
+    private void setUpScreenAndValues(View view) {
+        progressBar = view.findViewById(R.id.progressBarBeer);
+        emptyMessage = view.findViewById(R.id.empty_data_message);
+
+        RecyclerView beerNameRecyclerView = view.findViewById(R.id.beer_name_recycle_view);
+        beerNameRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        beerNameRecyclerView.setAdapter(beerNameAdapter);
+
         bottomNavigationHideListener.showBottomNavMenu();
         if (beerNameAdapter.getItemCount() == 0) {
             emptyMessage.setVisibility(View.VISIBLE);
@@ -139,6 +143,11 @@ public class SearchBeerNameFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.top_bar_menu_name_beer, menu);
+        setUpActionBar(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void setUpActionBar(Menu menu) { // установка searchView, отключение всего остального
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchViewDisposable = RxSearchView.queryTextChangeEvents(searchView)
@@ -150,8 +159,7 @@ public class SearchBeerNameFragment extends Fragment {
                     Context context = getContext();
                     if (context != null && InternetUtils.hasInternetConnection(context)) {
                         progressBar.setVisibility(View.VISIBLE);
-                        RetrofitSearchBeer.getInstance()
-                                .startDownloadBeerList(searchText, TYPE_BEER, 1);
+                        RetrofitSearchBeer.getInstance().startDownloadBeerList(searchText, TYPE_BEER, 1);
                     } else {
                         View view = getView();
                         if (view != null)
@@ -168,6 +176,5 @@ public class SearchBeerNameFragment extends Fragment {
                 actionBar.setDisplayShowTitleEnabled(false);
             }
         }
-        super.onCreateOptionsMenu(menu, inflater);
     }
 }

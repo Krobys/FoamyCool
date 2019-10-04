@@ -71,6 +71,10 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpListeners();
+    }
+
+    private void setUpListeners() {
         Activity activity = getActivity();
         if (activity != null) {
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
@@ -80,32 +84,34 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onResume() {
-        bottomNavigationHideListener.showBottomNavMenu();
-        super.onResume();
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setUpScreen();
         View view = inflater.inflate(R.layout.fragment_map_search, container, false);
         setHasOptionsMenu(true);
-        chooseButton = view.findViewById(R.id.choose_button);
+        setUpScreenAndValues(view);
+        setUpMapFragment();
+        setUpFusedLocationProvider();
+        return view;
+    }
 
+    private void setUpScreenAndValues(View view) {
+        chooseButton = view.findViewById(R.id.choose_button);
+        topBarHideListener.hideToolbar();
+        bottomNavigationHideListener.showBottomNavMenu();
+    }
+
+    private void setUpMapFragment() {
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapContainer);
         if (supportMapFragment != null) {
             supportMapFragment.getMapAsync(this);
         }
-        Context context = getContext();
-        if (context != null)
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        return view;
     }
 
-    private void setUpScreen() {
-        topBarHideListener.hideToolbar();
-        bottomNavigationHideListener.showBottomNavMenu();
+    private void setUpFusedLocationProvider() {
+        Context context = getContext();
+        if (context != null) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        }
     }
 
     @Override
@@ -139,25 +145,28 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission") // потому что вызывается после проверки на пермишены
     private void enableOwnLocation() {
         map.setMyLocationEnabled(true);
         getCurrentLocation();
     }
 
-    @SuppressLint("MissingPermission")
-    private void getCurrentLocation() {
-        boolean enabled = false;
+    private boolean checkGpsModuleEnabled() {
         Activity activity = getActivity();
         if (activity != null) {
             LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
             if (locationManager != null) {
-                enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             }
         }
+        return false;
+    }
 
-        if (enabled) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
+    @SuppressLint("MissingPermission")
+    private void moveToOwnPositionMap() {
+        Activity activity = getActivity();
+        if (activity != null)
+            fusedLocationClient.getLastLocation().addOnSuccessListener(activity, location -> {
                 if (location != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
@@ -165,6 +174,12 @@ public class MapSearchFragment extends Fragment implements OnMapReadyCallback {
                     map.moveCamera(cameraUpdate);
                 }
             });
+    }
+
+    @SuppressLint("MissingPermission") // потому что вызывается после проверки на пермишены
+    private void getCurrentLocation() {
+        if (checkGpsModuleEnabled()) {
+            moveToOwnPositionMap();
         } else {
             Toast.makeText(getContext(), "Please enable gps module", Toast.LENGTH_SHORT).show();
         }

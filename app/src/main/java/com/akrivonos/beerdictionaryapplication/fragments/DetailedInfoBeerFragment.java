@@ -44,25 +44,21 @@ public class DetailedInfoBeerFragment extends Fragment {
     private boolean isBeerFavorite;
 
     public DetailedInfoBeerFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Activity activity = getActivity();
-        if (activity != null) {
-            moveBackListener = (MoveBackListener) getActivity();
-            bottomNavigationHideListener = (BottomNavigationHideListener) getActivity();
-            appDatabase = RoomAppDatabase.getDatabase(activity);
-        }
-
+        setUpDatabaseAndListeners();
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public void onResume() {
-        bottomNavigationHideListener.hideBottomNavMenu();
-        super.onResume();
+    private void setUpDatabaseAndListeners() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            moveBackListener = (MoveBackListener) activity;
+            bottomNavigationHideListener = (BottomNavigationHideListener) activity;
+            appDatabase = RoomAppDatabase.getDatabase(activity);
+        }
     }
 
     @Override
@@ -70,11 +66,16 @@ public class DetailedInfoBeerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_beer, container, false);
         setHasOptionsMenu(true);
+        setUpScreenAndValues(view);
+        setUpBeerInformation();
+        return view;
+    }
+
+    private void setUpScreenAndValues(View view) {
         categoryBeerTextView = view.findViewById(R.id.category_text_beer);
         detailedInfoBeer = view.findViewById(R.id.description_text_beer);
         imageBeer = view.findViewById(R.id.image_beer);
-        setUpBeerInformation();
-        return view;
+        bottomNavigationHideListener.hideBottomNavMenu();
     }
 
     @Override
@@ -87,7 +88,7 @@ public class DetailedInfoBeerFragment extends Fragment {
         checkIsFavoriteBeerDisposable.dispose();
     }
 
-    private void setUpBeerInformation() {
+    private void setUpBeerInformation() { // устанавливаем информацию о пиве
         Bundle bundle = getArguments();
         if (bundle != null) {
             BeerDetailedDescription beerDetailedDescription = bundle.getParcelable(DETAILED_INFO_BEER);
@@ -116,7 +117,7 @@ public class DetailedInfoBeerFragment extends Fragment {
         setUpActionBar();
         String uniqueIdBeer = beerDetails.getId();
         MenuItem favoriteItem = menu.findItem(R.id.make_favorite_checker);
-        checkIsFavoriteBeerSetter(uniqueIdBeer, favoriteItem);
+        checkIsFavoriteBeerSetter(uniqueIdBeer, favoriteItem); // подписываемся на базу
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -126,15 +127,15 @@ public class DetailedInfoBeerFragment extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 moveBackListener.moveBack();
-                break;
+                return true;
             case R.id.make_favorite_checker:
                 switchFavoriteState();
-                break;
+                return true;
         }
         return false;
     }
 
-    private void setUpActionBar() {
+    private void setUpActionBar() { // настройка тулбара, (кнопка назад и тайтл)
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();
@@ -149,19 +150,19 @@ public class DetailedInfoBeerFragment extends Fragment {
     private void switchFavoriteState() {
         String uniqueBeerId = beerDetails.getId();
         if (isBeerFavorite) {
-            appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)
+            appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)//изменяем состояние в базе на не избранное
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe();
         } else {
-            appDatabase.favoriteBeerDao().setBeerFavorite(beerDetails)
+            appDatabase.favoriteBeerDao().setBeerFavorite(beerDetails)//изменяем состояние в базе на избранное
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe();
         }
     }
 
-    private void checkIsFavoriteBeerSetter(String uniqueId, MenuItem favoriteItem) {
+    private void checkIsFavoriteBeerSetter(String uniqueId, MenuItem favoriteItem) { //подписываемся на базу данных и слушаем изменение состояния
         checkIsFavoriteBeerDisposable = appDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

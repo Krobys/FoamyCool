@@ -32,14 +32,6 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
         this.breweryList = breweryList;
     }
 
-    public void addData(List<BreweryDetailedDescription> breweryList) {
-        this.breweryList.addAll(breweryList);
-    }
-
-    public void throwOffData() {
-        breweryList.clear();
-    }
-
     public boolean isSet() {
         return breweryList.size() > 0;
     }

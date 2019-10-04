@@ -64,11 +64,11 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         disposablePageSettings.dispose();
     }
 
-    public void setData(List<BeerDetailedDescription> beerList) {
+    public void setData(List<BeerDetailedDescription> beerList) {//для единичной установки данных, где постраничная подгрузка не требуется
         beerTypesList = beerList;
     }
 
-    public void addData(List<BeerDetailedDescription> beerList) {
+    public void addData(List<BeerDetailedDescription> beerList) { // для подгрузки данных со следующе страницы и их добавления
         String addedBeerName = beerList.get(0).getNameBeer();
         if (beerList.size() != 0 && !addedBeerName.equals(beerTypeName)) {
             beerTypesList.clear();
@@ -105,15 +105,20 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
 
     @Override
     public void onViewAttachedToWindow(@NonNull BeerTypeViewHolder holder) {
+        downloadNextPageIfMatchConditions(holder);
+        super.onViewAttachedToWindow(holder);
+    }
+
+    private void downloadNextPageIfMatchConditions(BeerTypeViewHolder holder) {
         if (holder.getAdapterPosition() + 3 == beerTypesList.size()) {
             if (pageSettingsDownloadingAdapter != null) {
                 int currentPage = pageSettingsDownloadingAdapter.getCurrentPage();
                 int pagesAmount = pageSettingsDownloadingAdapter.getPagesAmount();
                 if (currentPage < pagesAmount)
-                    RetrofitSearchBeer.getInstance().startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage() + 1);
+                    RetrofitSearchBeer.getInstance()
+                            .startDownloadBeerList(beerTypeName, TYPE_BEER, pageSettingsDownloadingAdapter.getCurrentPage() + 1);
             }
         }
-        super.onViewAttachedToWindow(holder);
     }
 
     @Override

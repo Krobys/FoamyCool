@@ -3,6 +3,7 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -81,13 +82,17 @@ public class SearchGeoBreweryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpAdapterAndListeners();
+        startLoadingInformation();
+    }
+
+    private void setUpAdapterAndListeners() {
         Activity activity = getActivity();
         if (activity != null) {
             MoveToDetailsBreweryListener moveToDetailsBreweryListener = (MoveToDetailsBreweryListener) activity;
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
             moveBackListener = (MoveBackListener) activity;
             breweryAdapter = new BreweryAdapter(getContext(), moveToDetailsBreweryListener);
-            startLoadingInformation();
         }
     }
 
@@ -96,17 +101,17 @@ public class SearchGeoBreweryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_geo_brewery, container, false);
         setHasOptionsMenu(true);
+        setUpScreenAndValues(view);
+        makeObservers();
+        return view;
+    }
+
+    private void setUpScreenAndValues(View view) {
         progressBar = view.findViewById(R.id.progressBarBrewery);
         noBreweriesMessage = view.findViewById(R.id.no_breweries_message);
         RecyclerView recyclerViewBrewery = view.findViewById(R.id.recycle_view_brewery);
         recyclerViewBrewery.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewBrewery.setAdapter(breweryAdapter);
-        makeObservers();
-        setUpScreen();
-        return view;
-    }
-
-    private void setUpScreen() {
         if (breweryAdapter.isSet()) {
             progressBar.setVisibility(View.GONE);
         }
@@ -128,6 +133,7 @@ public class SearchGeoBreweryFragment extends Fragment {
     }
 
     private void startLoadingInformation() {
+        Log.d("test", "startLoadingInformation: ");
         Bundle bundle = getArguments();
         if (bundle != null) {
             LatLng coordinatesBreweries = bundle.getParcelable(COORDINATES_BREWERIES_SEARCH);
@@ -137,6 +143,11 @@ public class SearchGeoBreweryFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        setUpActionBar();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void setUpActionBar() {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         if (appCompatActivity != null) {
             ActionBar actionBar = appCompatActivity.getSupportActionBar();
@@ -146,9 +157,7 @@ public class SearchGeoBreweryFragment extends Fragment {
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setTitle("Breweries on map");
             }
-
         }
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
