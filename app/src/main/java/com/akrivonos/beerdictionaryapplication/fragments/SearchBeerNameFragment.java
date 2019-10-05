@@ -151,9 +151,9 @@ public class SearchBeerNameFragment extends Fragment {
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchViewDisposable = RxSearchView.queryTextChangeEvents(searchView)
-                .debounce(400, TimeUnit.MILLISECONDS)
+                .debounce(600, TimeUnit.MILLISECONDS)
                 .map(o -> o.getQueryText().toString())
-                .filter(searchText -> searchText.length() > 2)
+                .filter(searchText -> searchText.length() > 3)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchText -> {
                     Context context = getContext();

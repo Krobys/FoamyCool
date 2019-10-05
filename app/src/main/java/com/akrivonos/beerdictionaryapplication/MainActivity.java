@@ -56,6 +56,20 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     }
 
     @Override
+    public void setResultCoordinatesSearchBreweries(LatLng latLng) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(COORDINATES_BREWERIES_SEARCH, latLng);
+        navController.navigate(R.id.navigation_search_brewery, bundle);
+    }
+
+    @Override
+    public void moveToDetails(BreweryDetailedDescription breweryDetailedDescription) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(DETAILED_INFO_BREWERY, breweryDetailedDescription);
+        navController.navigate(R.id.navigation_detailed_info_brewery, bundle);
+    }
+
+    @Override
     public void moveBack() {
         navController.popBackStack();
     }
@@ -68,20 +82,6 @@ public class MainActivity extends AppCompatActivity implements MoveToDetailsBeer
     @Override
     public void showBottomNavMenu() {
         navView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void setResultCoordinatesSearchBreweries(LatLng latLng) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(COORDINATES_BREWERIES_SEARCH, latLng);
-        navController.navigate(R.id.navigation_search_brewery, bundle);
-    }
-
-    @Override
-    public void moveToDetails(BreweryDetailedDescription breweryDetailedDescription) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(DETAILED_INFO_BREWERY, breweryDetailedDescription);
-        navController.navigate(R.id.navigation_detailed_info_brewery, bundle);
     }
 
     @Override

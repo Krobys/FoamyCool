@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import retrofit2.Call;
@@ -33,8 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitSearchBeer {
 
     private Call lastProcess;
-    private BehaviorSubject<ArrayList<BeerDetailedDescription>> beerPublishSubject;
-    private BehaviorSubject<ArrayList<BreweryDetailedDescription>> breweryPublishSubject;
+    private BehaviorSubject<ArrayList<BeerDetailedDescription>> beerBehaviorSubject;
+    private BehaviorSubject<ArrayList<BreweryDetailedDescription>> breweryBehaviorSubject;
     private PublishSubject<PageSettingsDownloading> pageSettingsDownloadingPublishSubject;
     private final static String SANDBOX_API_KEY = "14bac69989f93ce2755e0830d3a5c851";
     private final static String BASE_URL = "https://sandbox-api.brewerydb.com/v2/";
@@ -60,18 +61,18 @@ public class RetrofitSearchBeer {
     }
 
     public RetrofitSearchBeer setObserverBeerNames(io.reactivex.Observer<ArrayList<BeerDetailedDescription>> observer) {
-        beerPublishSubject = BehaviorSubject.create();
-        beerPublishSubject
-                .subscribeOn(AndroidSchedulers.mainThread())//ПРОВЕРИТЬ
+        beerBehaviorSubject = BehaviorSubject.create();
+        beerBehaviorSubject
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
         return retrofitSearchDownload;
     }
 
     public RetrofitSearchBeer setObserverBreweries(io.reactivex.Observer<ArrayList<BreweryDetailedDescription>> observer) {
-        breweryPublishSubject = BehaviorSubject.create();
-        breweryPublishSubject
-                .subscribeOn(AndroidSchedulers.mainThread())
+        breweryBehaviorSubject = BehaviorSubject.create();
+        breweryBehaviorSubject
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
         return retrofitSearchDownload;
@@ -80,7 +81,7 @@ public class RetrofitSearchBeer {
     public RetrofitSearchBeer setObserverPageSettingsAdapter(io.reactivex.Observer<PageSettingsDownloading> observer) {
         pageSettingsDownloadingPublishSubject = PublishSubject.create();
         pageSettingsDownloadingPublishSubject
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
         return retrofitSearchDownload;
@@ -93,21 +94,21 @@ public class RetrofitSearchBeer {
             @Override
             public void onResponse(@NonNull Call<BeerModel> call, @NonNull Response<BeerModel> response) {
                 BeerModel beerModel = response.body();
-                if (beerPublishSubject.hasObservers())
+                if (beerBehaviorSubject.hasObservers())
                     if (beerModel != null) {
                         if (response.code() == 200) {
-                            beerPublishSubject.onNext(makeBeerListFromBeerModel(beerModel));
+                            beerBehaviorSubject.onNext(makeBeerListFromBeerModel(beerModel));
                             pageSettingsDownloadingPublishSubject.onNext(makePageSettings(beerModel));
                         } else {
-                            beerPublishSubject.onNext(new ArrayList<>());
+                            beerBehaviorSubject.onNext(new ArrayList<>());
                         }
                     }
             }
 
             @Override
             public void onFailure(@NonNull Call<BeerModel> call, @NotNull Throwable t) {
-                if (beerPublishSubject.hasObservers())
-                    beerPublishSubject.onNext(new ArrayList<>());
+                if (beerBehaviorSubject.hasObservers())
+                    beerBehaviorSubject.onNext(new ArrayList<>());
             }
 
         });
@@ -130,19 +131,19 @@ public class RetrofitSearchBeer {
             public void onResponse(@NonNull Call<BreweryModel> call, @NonNull Response<BreweryModel> response) {
                 BreweryModel breweryModel = response.body();
                 if (breweryModel != null) {
-                    if (breweryPublishSubject.hasObservers())
+                    if (breweryBehaviorSubject.hasObservers())
                         if (response.code() == 200) {
-                            breweryPublishSubject.onNext(makeBreweryListFromBreweryModel(breweryModel));
+                            breweryBehaviorSubject.onNext(makeBreweryListFromBreweryModel(breweryModel));
                         } else {
-                            breweryPublishSubject.onNext(new ArrayList<>());
+                            breweryBehaviorSubject.onNext(new ArrayList<>());
                         }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<BreweryModel> call, @NonNull Throwable t) {
-                if (breweryPublishSubject.hasObservers())
-                    breweryPublishSubject.onNext(new ArrayList<>());
+                if (breweryBehaviorSubject.hasObservers())
+                    breweryBehaviorSubject.onNext(new ArrayList<>());
 
             }
 
@@ -157,19 +158,19 @@ public class RetrofitSearchBeer {
             public void onResponse(@NonNull Call<BreweryBeersModel> call, @NonNull Response<BreweryBeersModel> response) {
                 BreweryBeersModel breweryBeersModel = response.body();
                 if (breweryBeersModel != null) {
-                    if (beerPublishSubject.hasObservers())
+                    if (beerBehaviorSubject.hasObservers())
                         if (response.code() == 200) {
-                            beerPublishSubject.onNext(makeBeerListFromBreweryBeersModel(breweryBeersModel));
+                            beerBehaviorSubject.onNext(makeBeerListFromBreweryBeersModel(breweryBeersModel));
                         } else {
-                            beerPublishSubject.onNext(new ArrayList<>());
+                            beerBehaviorSubject.onNext(new ArrayList<>());
                         }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<BreweryBeersModel> call, @NonNull Throwable t) {
-                if (beerPublishSubject.hasObservers())
-                    beerPublishSubject.onNext(new ArrayList<>());
+                if (beerBehaviorSubject.hasObservers())
+                    beerBehaviorSubject.onNext(new ArrayList<>());
             }
 
         });
