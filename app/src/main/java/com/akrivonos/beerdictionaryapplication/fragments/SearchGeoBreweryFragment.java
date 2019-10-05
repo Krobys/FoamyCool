@@ -20,59 +20,30 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akrivonos.beerdictionaryapplication.BeerModel;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BreweryAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBreweryListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.BreweriesPresenterListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.BreweryViewListener;
 import com.akrivonos.beerdictionaryapplication.models.BreweryDetailedDescription;
-import com.akrivonos.beerdictionaryapplication.retrofit.RetrofitSearchBeer;
+import com.akrivonos.beerdictionaryapplication.presenters.BreweryPresenter;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import java.util.List;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.COORDINATES_BREWERIES_SEARCH;
 
-public class SearchGeoBreweryFragment extends Fragment {
+public class SearchGeoBreweryFragment extends Fragment implements BreweryViewListener {
 
     private BreweryAdapter breweryAdapter;
-    private Disposable observerBreweryDisposable;
     private ProgressBar progressBar;
     private LinearLayout noBreweriesMessage;
     private MoveBackListener moveBackListener;
     private BottomNavigationHideListener bottomNavigationHideListener;
-    private final Observer<ArrayList<BreweryDetailedDescription>> observerBrewery = new Observer<ArrayList<BreweryDetailedDescription>>() {
-        @Override
-        public void onSubscribe(Disposable d) {
-            observerBreweryDisposable = d;
-        }
-
-        @Override
-        public void onNext(ArrayList<BreweryDetailedDescription> beerModels) {
-            if (beerModels.size() != 0) {
-                breweryAdapter.setData(beerModels);
-                breweryAdapter.notifyDataSetChanged();
-            } else {
-                noBreweriesMessage.setVisibility(View.VISIBLE);
-                noBreweriesMessage.setOnClickListener(v -> moveBackListener.moveBack());
-            }
-            progressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    };
-
+    private BreweriesPresenterListener presenterListener;
     public SearchGeoBreweryFragment() {
         // Required empty public constructor
     }
@@ -81,8 +52,8 @@ public class SearchGeoBreweryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpPresenter();
         setUpAdapterAndListeners();
-        startLoadingInformation();
     }
 
     private void setUpAdapterAndListeners() {
@@ -101,13 +72,19 @@ public class SearchGeoBreweryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search_geo_brewery, container, false);
         setHasOptionsMenu(true);
         setUpScreenAndValues(view);
-        makeObservers();
+        startLoadingInformation();
         return view;
+    }
+
+    private void setUpPresenter(){
+        BeerModel beerModel = BeerModel.getInstance(getContext());
+        presenterListener = new BreweryPresenter(beerModel, this);
     }
 
     private void setUpScreenAndValues(View view) {
         progressBar = view.findViewById(R.id.progressBarBrewery);
         noBreweriesMessage = view.findViewById(R.id.no_breweries_message);
+        noBreweriesMessage.setOnClickListener(v -> moveBackListener.moveBack());
         RecyclerView recyclerViewBrewery = view.findViewById(R.id.recycle_view_brewery);
         recyclerViewBrewery.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewBrewery.setAdapter(breweryAdapter);
@@ -120,22 +97,16 @@ public class SearchGeoBreweryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        disposeObservers();
-    }
-
-    private void disposeObservers() {
-        observerBreweryDisposable.dispose();
-    }
-
-    private void makeObservers() {
-        RetrofitSearchBeer.getInstance().setObserverBreweries(observerBrewery);
+        presenterListener.detachView();
     }
 
     private void startLoadingInformation() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            LatLng coordinatesBreweries = bundle.getParcelable(COORDINATES_BREWERIES_SEARCH);
-            RetrofitSearchBeer.getInstance().startDownloadBreweryList(coordinatesBreweries);
+        if (!breweryAdapter.isSet()){
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                LatLng coordinatesBreweries = bundle.getParcelable(COORDINATES_BREWERIES_SEARCH);
+                presenterListener.loadBreweryList(coordinatesBreweries);
+            }
         }
     }
 
@@ -165,5 +136,21 @@ public class SearchGeoBreweryFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void showBreweryList(List<BreweryDetailedDescription> breweryList) {
+        breweryAdapter.setData(breweryList);
+        breweryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setVisibilityEmptyMessage(int visibility) {
+        noBreweriesMessage.setVisibility(visibility);
+    }
+
+    @Override
+    public void setVisibilityProgressBar(int visibility) {
+        progressBar.setVisibility(visibility);
     }
 }

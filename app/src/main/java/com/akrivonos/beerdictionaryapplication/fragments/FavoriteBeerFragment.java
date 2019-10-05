@@ -20,22 +20,23 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akrivonos.beerdictionaryapplication.BeerModel;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
-import com.akrivonos.beerdictionaryapplication.room.RoomAppDatabase;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.FavoriteBeerViewPresenterListener;
+import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
+import com.akrivonos.beerdictionaryapplication.presenters.FavoriteBeerPresenter;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import java.util.List;
 
-public class FavoriteBeerFragment extends Fragment {
+public class FavoriteBeerFragment extends Fragment implements FavoriteBeerViewPresenterListener {
     private MoveBackListener moveBackListener;
     private BeerNameAdapter beerNameAdapterFavorites;
-    private RoomAppDatabase appDatabase;
-    private Disposable favoritesBeerDisposable;
     private ConstraintLayout emptyMessage;
+    private FavoriteBeerPresenter favoriteBeerPresenter;
+    private RecyclerView recyclerViewFavorite;
     private final ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
@@ -46,10 +47,7 @@ public class FavoriteBeerFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             if (direction == ItemTouchHelper.LEFT) {
                 String beerId = beerNameAdapterFavorites.getItem(viewHolder.getAdapterPosition()).getId();
-                appDatabase.favoriteBeerDao().setBeerNotFavorite(beerId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.io())
-                        .subscribe();
+                favoriteBeerPresenter.setBeerNotFavorite(beerId);
             }
         }
     };
@@ -61,6 +59,7 @@ public class FavoriteBeerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpPresenter();
         setUpAdapterAndListeners();
     }
 
@@ -70,7 +69,6 @@ public class FavoriteBeerFragment extends Fragment {
             MoveToDetailsBeerListener moveToDetailsBeerListener = (MoveToDetailsBeerListener) activity;
             beerNameAdapterFavorites = new BeerNameAdapter(activity, moveToDetailsBeerListener);
             moveBackListener = (MoveBackListener) activity;
-            appDatabase = RoomAppDatabase.getDatabase(activity);
         }
     }
 
@@ -80,43 +78,28 @@ public class FavoriteBeerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favorite_beer, container, false);
         setHasOptionsMenu(true);
         setUpScreenAndValues(view);
-        makeObserverDatabaseFavorites();
         setUpActionBar();
         return view;
     }
 
+    private void setUpPresenter(){
+        BeerModel beerModel = BeerModel.getInstance(getContext());
+        favoriteBeerPresenter = new FavoriteBeerPresenter(beerModel, this);
+    }
+
     private void setUpScreenAndValues(View view) {
-        RecyclerView recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
+        recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
         emptyMessage = view.findViewById(R.id.empty_data_message);
         recyclerViewFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewFavorite.setAdapter(beerNameAdapterFavorites);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerViewFavorite);
-    }
-
-    private void makeObserverDatabaseFavorites() {
-        favoritesBeerDisposable = appDatabase.favoriteBeerDao().getFavoritesBeer()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(favoritesBeerList -> {
-                    if (favoritesBeerList.size() > 0) {
-                        beerNameAdapterFavorites.setData(favoritesBeerList);
-                        beerNameAdapterFavorites.notifyDataSetChanged();
-                        emptyMessage.setVisibility(View.GONE);
-                    } else {
-                        emptyMessage.setVisibility(View.VISIBLE);
-                    }
-
-                });
+        favoriteBeerPresenter.loadFavoriteBeerList();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        disposeAll();
-    }
-
-    private void disposeAll() {
-        favoritesBeerDisposable.dispose();
+        favoriteBeerPresenter.detachView();
     }
 
     private void setUpActionBar() {
@@ -142,5 +125,21 @@ public class FavoriteBeerFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void showBeerList(List<BeerDetailedDescription> beerDetailedDescriptions) {
+        beerNameAdapterFavorites.setData(beerDetailedDescriptions);
+        beerNameAdapterFavorites.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setVisibilityEmptyMessage(int visibility) {
+        emptyMessage.setVisibility(visibility);
+    }
+
+    @Override
+    public void setVisibilityRecView(int visibility) {
+        recyclerViewFavorite.setVisibility(visibility);
     }
 }

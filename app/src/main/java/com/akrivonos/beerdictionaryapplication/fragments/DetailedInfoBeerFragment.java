@@ -3,6 +3,7 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -94,7 +95,8 @@ public class DetailedInfoBeerFragment extends Fragment {
             BeerDetailedDescription beerDetailedDescription = bundle.getParcelable(DETAILED_INFO_BEER);
             if (beerDetailedDescription != null) {
                 beerDetails = beerDetailedDescription;
-                if (beerDetailedDescription.getIconBigUrl() != null)
+                String iconUrl = beerDetailedDescription.getIconBigUrl();
+                if (!TextUtils.isEmpty(iconUrl))
                     Glide.with(imageBeer)
                             .load(beerDetailedDescription.getIconBigUrl())
                             .into(imageBeer);
@@ -165,7 +167,10 @@ public class DetailedInfoBeerFragment extends Fragment {
     private void checkIsFavoriteBeerObserver(String uniqueId, MenuItem favoriteItem) { //подписываемся на базу данных и слушаем изменение состояния
         checkIsFavoriteBeerDisposable = appDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueId)
                 .subscribeOn(Schedulers.io())
-                .map(list -> list.size() != 0)
+                .map(list -> {
+                    isBeerFavorite = list.size() != 0;
+                    return isBeerFavorite;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isBeerFavorite -> favoriteItem.setIcon((isBeerFavorite)
                         ? R.drawable.ic_star_black_24dp

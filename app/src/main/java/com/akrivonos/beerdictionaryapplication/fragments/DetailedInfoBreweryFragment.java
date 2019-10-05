@@ -20,57 +20,30 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akrivonos.beerdictionaryapplication.BeerModel;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.DetailedBreweryPresenterListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.DetailedBreweryViewListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
 import com.akrivonos.beerdictionaryapplication.models.BreweryDetailedDescription;
-import com.akrivonos.beerdictionaryapplication.retrofit.RetrofitSearchBeer;
+import com.akrivonos.beerdictionaryapplication.presenters.DetailedInfoBreweryPresenter;
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import java.util.List;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.DETAILED_INFO_BREWERY;
 
-public class DetailedInfoBreweryFragment extends Fragment {
-    private Disposable observerBeerDisposable;
+public class DetailedInfoBreweryFragment extends Fragment implements DetailedBreweryViewListener {
     private MoveBackListener moveBackListener;
     private BeerNameAdapter beerNameAdapter;
     private ImageView imageBrewery;
     private TextView descriptionBrewery;
     private ProgressBar progressBar;
     private ConstraintLayout noBeerMessage;
-
-    private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() { // observer for retrofit
-        @Override
-        public void onSubscribe(Disposable d) {
-            observerBeerDisposable = d;
-        }
-
-        @Override
-        public void onNext(ArrayList<BeerDetailedDescription> beerModels) {
-            if (beerModels.size() != 0) {
-                beerNameAdapter.setData(beerModels);
-                beerNameAdapter.notifyDataSetChanged();
-            } else {
-                noBeerMessage.setVisibility(View.VISIBLE);
-            }
-            progressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onComplete() {
-        }
-    };
+    private DetailedBreweryPresenterListener presenterListener;
 
     public DetailedInfoBreweryFragment() {
         // Required empty public constructor
@@ -79,6 +52,7 @@ public class DetailedInfoBreweryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpPresenter();
         startLoadBreweryBeerListData();
         setUpAdapterAndListeners();
     }
@@ -98,11 +72,10 @@ public class DetailedInfoBreweryFragment extends Fragment {
             BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);
             if (breweryDetailedDescription != null) {
                 String idBrewery = breweryDetailedDescription.getIdBrewery();
-                RetrofitSearchBeer.getInstance().startDownloadBeersListInBrewery(idBrewery);
+                presenterListener.loadBeerInBreweryList(idBrewery);
             }
         }
     }
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -111,8 +84,12 @@ public class DetailedInfoBreweryFragment extends Fragment {
         setHasOptionsMenu(true);
         setUpScreenAndValues(view);
         setUpBreweryInformation();
-        makeObservers();
         return view;
+    }
+
+    private void setUpPresenter(){
+        BeerModel beerModel = BeerModel.getInstance(getContext());
+        presenterListener = new DetailedInfoBreweryPresenter(beerModel, this);
     }
 
     private void setUpScreenAndValues(View view) {
@@ -121,6 +98,7 @@ public class DetailedInfoBreweryFragment extends Fragment {
         recyclerViewBeers.setAdapter(beerNameAdapter);
 
         noBeerMessage = view.findViewById(R.id.no_beer_message);
+        noBeerMessage.setVisibility(View.GONE);
         imageBrewery = view.findViewById(R.id.image_brewery);
         descriptionBrewery = view.findViewById(R.id.description_brewery);
         progressBar = view.findViewById(R.id.progressBarBeer);
@@ -129,15 +107,7 @@ public class DetailedInfoBreweryFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        disposeAll();
-    }
-
-    private void makeObservers() {
-        RetrofitSearchBeer.getInstance().setObserverBeerNames(observerBeer);
-    }
-
-    private void disposeAll() {
-        observerBeerDisposable.dispose();
+        presenterListener.detachView();
     }
 
     private void setUpBreweryInformation() { // устанавливаем информацию о пивоварне
@@ -176,4 +146,19 @@ public class DetailedInfoBreweryFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void setBeerinBreweryList(List<BeerDetailedDescription> beerinBreweryList) {
+        beerNameAdapter.setData(beerinBreweryList);
+        beerNameAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setVisibilityEmptyMessage(int visibility) {
+        noBeerMessage.setVisibility(visibility);
+    }
+
+    @Override
+    public void setVisibilityProgressBar(int visibility) {
+        progressBar.setVisibility(visibility);
+    }
 }
