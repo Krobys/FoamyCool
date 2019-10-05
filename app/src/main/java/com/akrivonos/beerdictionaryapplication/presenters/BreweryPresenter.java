@@ -18,36 +18,35 @@ public class BreweryPresenter implements BreweriesPresenterListener {
     private Disposable observerDisposable;
     private BreweryViewListener viewPresenterListener;
 
-    private final Observer<ArrayList<BreweryDetailedDescription>> observerBrewery = new Observer<ArrayList<BreweryDetailedDescription>>() {
-        @Override
-        public void onSubscribe(Disposable d) {
-            observerDisposable = d;
-        }
-
-        @Override
-        public void onNext(ArrayList<BreweryDetailedDescription> breweryModels) {
-            if (breweryModels.size() != 0) {
-               viewPresenterListener.showBreweryList(breweryModels);
-                viewPresenterListener.setVisibilityEmptyMessage(View.GONE);
-            } else {
-                viewPresenterListener.setVisibilityEmptyMessage(View.VISIBLE);
-            }
-            viewPresenterListener.setVisibilityProgressBar(View.GONE);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    };
-
     public BreweryPresenter(BeerModel beerModel, BreweryViewListener breweryViewListener) {
         this.beerModel = beerModel;
+        Observer<ArrayList<BreweryDetailedDescription>> observerBrewery = new Observer<ArrayList<BreweryDetailedDescription>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                observerDisposable = d;
+            }
+
+            @Override
+            public void onNext(ArrayList<BreweryDetailedDescription> breweryModels) {
+                if (breweryModels.size() != 0) {
+                    viewPresenterListener.showBreweryList(breweryModels);
+                    viewPresenterListener.setVisibilityEmptyMessage(View.GONE);
+                } else {
+                    viewPresenterListener.setVisibilityEmptyMessage(View.VISIBLE);
+                }
+                viewPresenterListener.setVisibilityProgressBar(View.GONE);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
         beerModel.setBreweryObserverRetrofit(observerBrewery);
         this.viewPresenterListener = breweryViewListener;
     }
