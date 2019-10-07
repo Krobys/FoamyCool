@@ -52,7 +52,6 @@ public class DetailedInfoBreweryFragment extends Fragment implements DetailedBre
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startLoadBreweryBeerListData();
         setUpAdapterAndListeners();
     }
 
@@ -82,6 +81,7 @@ public class DetailedInfoBreweryFragment extends Fragment implements DetailedBre
         View view = inflater.inflate(R.layout.fragment_detailed_info_brewery, container, false);
         setHasOptionsMenu(true);
         setUpPresenter();
+        startLoadBreweryBeerListData();
         setUpScreenAndValues(view);
         setUpBreweryInformation();
         return view;

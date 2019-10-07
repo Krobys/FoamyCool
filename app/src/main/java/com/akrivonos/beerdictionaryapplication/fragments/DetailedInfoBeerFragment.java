@@ -47,8 +47,8 @@ public class DetailedInfoBeerFragment extends Fragment implements DetailedBeerVi
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setUpDatabaseAndListeners();
         super.onCreate(savedInstanceState);
+        setUpDatabaseAndListeners();
     }
 
     private void setUpDatabaseAndListeners() {
