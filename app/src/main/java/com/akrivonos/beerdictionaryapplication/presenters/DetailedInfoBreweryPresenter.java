@@ -15,7 +15,7 @@ import io.reactivex.disposables.Disposable;
 public class DetailedInfoBreweryPresenter implements DetailedBreweryPresenterListener {
     private Disposable disposableBeer;
     private final BeerModel beerModel;
-    private DetailedBreweryViewListener viewPresenterListener;
+    private final DetailedBreweryViewListener viewPresenterListener;
 
     private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() { // observer for retrofit
         @Override

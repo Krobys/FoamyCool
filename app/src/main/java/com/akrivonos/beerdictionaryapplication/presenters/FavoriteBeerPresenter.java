@@ -15,11 +15,11 @@ import io.reactivex.functions.Consumer;
 public class FavoriteBeerPresenter implements FavoriteBeerPresenterListener {
     private Disposable disposableBeer;
     private final BeerModel beerModel;
-    private FavoriteBeerViewPresenterListener viewPresenterListener;
+    private final FavoriteBeerViewPresenterListener viewPresenterListener;
 
-    private Consumer<List<BeerDetailedDescription>> consumer = new Consumer<List<BeerDetailedDescription>>() {
+    private final Consumer<List<BeerDetailedDescription>> consumer = new Consumer<List<BeerDetailedDescription>>() {
         @Override
-        public void accept(List<BeerDetailedDescription> beerDetailedDescriptions) throws Exception {
+        public void accept(List<BeerDetailedDescription> beerDetailedDescriptions) {
             if (beerDetailedDescriptions.size() > 0) {
                 viewPresenterListener.showBeerList(beerDetailedDescriptions);
                 viewPresenterListener.setVisibilityEmptyMessage(View.GONE);

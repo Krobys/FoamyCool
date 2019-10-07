@@ -16,7 +16,7 @@ public class BeerPresenter implements BeerPresenterListener{
 
     private final BeerModel beerModel;
     private Disposable observerDisposable;
-    private BeerViewListener viewPresenterListener;
+    private final BeerViewListener viewPresenterListener;
 
     private final Observer<ArrayList<BeerDetailedDescription>> observerBeerListDownload = new Observer<ArrayList<BeerDetailedDescription>>() {//observer beer for retrofit
         @Override

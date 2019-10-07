@@ -20,8 +20,8 @@ import static com.akrivonos.beerdictionaryapplication.fragments.SearchBeerNameFr
 
 public class BeerModel {
 
-    private RoomAppDatabase roomAppDatabase;
-    private RetrofitSearchBeer retrofitSearchBeer;
+    private final RoomAppDatabase roomAppDatabase;
+    private final RetrofitSearchBeer retrofitSearchBeer;
     private static BeerModel beerModel;
 
     public static BeerModel getInstance(Context context){
