@@ -165,7 +165,10 @@ public class DetailedInfoBeerFragment extends Fragment {
     private void checkIsFavoriteBeerObserver(String uniqueId, MenuItem favoriteItem) { //подписываемся на базу данных и слушаем изменение состояния
         checkIsFavoriteBeerDisposable = appDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueId)
                 .subscribeOn(Schedulers.io())
-                .map(list -> list.size() != 0)
+                .map(list -> {
+                    isBeerFavorite = list.size() != 0;
+                    return isBeerFavorite;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isBeerFavorite -> favoriteItem.setIcon((isBeerFavorite)
                         ? R.drawable.ic_star_black_24dp
