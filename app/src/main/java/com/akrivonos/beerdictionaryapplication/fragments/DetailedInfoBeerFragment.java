@@ -19,30 +19,28 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.DetailedBeerPresenterListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.DetailedBeerViewListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
-import com.akrivonos.beerdictionaryapplication.room.RoomAppDatabase;
+import com.akrivonos.beerdictionaryapplication.presenters.DetailedInfoBeerPresenter;
 import com.bumptech.glide.Glide;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.akrivonos.beerdictionaryapplication.MainActivity.DETAILED_INFO_BEER;
 
-public class DetailedInfoBeerFragment extends Fragment {
+public class DetailedInfoBeerFragment extends Fragment implements DetailedBeerViewListener {
 
     private TextView categoryBeerTextView;
     private TextView detailedInfoBeer;
     private ImageView imageBeer;
     private MoveBackListener moveBackListener;
     private BottomNavigationHideListener bottomNavigationHideListener;
-    private RoomAppDatabase appDatabase;
     private BeerDetailedDescription beerDetails;
-    private Disposable checkIsFavoriteBeerDisposable;
-    private boolean isBeerFavorite;
+    private MenuItem favoriteItem;
+    private DetailedBeerPresenterListener presenterListener;
 
     public DetailedInfoBeerFragment() {
     }
@@ -58,7 +56,6 @@ public class DetailedInfoBeerFragment extends Fragment {
         if (activity != null) {
             moveBackListener = (MoveBackListener) activity;
             bottomNavigationHideListener = (BottomNavigationHideListener) activity;
-            appDatabase = RoomAppDatabase.getDatabase(activity);
         }
     }
 
@@ -67,9 +64,15 @@ public class DetailedInfoBeerFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_beer, container, false);
         setHasOptionsMenu(true);
+        setUpPresenter();
         setUpScreenAndValues(view);
         setUpBeerInformation();
         return view;
+    }
+
+    private void setUpPresenter() {
+        BeerModelData beerModelData = BeerModelData.getInstance(getContext());
+        presenterListener = new DetailedInfoBeerPresenter(beerModelData, this);
     }
 
     private void setUpScreenAndValues(View view) {
@@ -82,12 +85,9 @@ public class DetailedInfoBeerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        disposeAll();
+        presenterListener.detachView();
     }
 
-    private void disposeAll() {
-        checkIsFavoriteBeerDisposable.dispose();
-    }
 
     private void setUpBeerInformation() { // устанавливаем информацию о пиве
         Bundle bundle = getArguments();
@@ -118,8 +118,8 @@ public class DetailedInfoBeerFragment extends Fragment {
         inflater.inflate(R.menu.detailed_beer_menu, menu);
         setUpActionBar();
         String uniqueIdBeer = beerDetails.getId();
-        MenuItem favoriteItem = menu.findItem(R.id.make_favorite_checker);
-        checkIsFavoriteBeerObserver(uniqueIdBeer, favoriteItem); // подписываемся на базу
+        favoriteItem = menu.findItem(R.id.make_favorite_checker);
+        presenterListener.setObserverChangeStatusBeer(uniqueIdBeer);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -150,31 +150,12 @@ public class DetailedInfoBeerFragment extends Fragment {
     }
 
     private void switchFavoriteState() {
-        String uniqueBeerId = beerDetails.getId();
-        if (isBeerFavorite) {
-            appDatabase.favoriteBeerDao().setBeerNotFavorite(uniqueBeerId)//изменяем состояние в базе на не избранное
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .subscribe();
-        } else {
-            appDatabase.favoriteBeerDao().setBeerFavorite(beerDetails)//изменяем состояние в базе на избранное
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .subscribe();
-        }
+        presenterListener.switchFavoriteButtonState(beerDetails);
     }
 
-    private void checkIsFavoriteBeerObserver(String uniqueId, MenuItem favoriteItem) { //подписываемся на базу данных и слушаем изменение состояния
-        checkIsFavoriteBeerDisposable = appDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueId)
-                .subscribeOn(Schedulers.io())
-                .map(list -> {
-                    isBeerFavorite = list.size() != 0;
-                    return isBeerFavorite;
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isBeerFavorite -> favoriteItem.setIcon((isBeerFavorite)
-                        ? R.drawable.ic_star_black_24dp
-                        : R.drawable.ic_star_border_black_24dp));
+    @Override
+    public void setFavoriteIcon(int icon) {
+        favoriteItem.setIcon(icon);
     }
 }
 

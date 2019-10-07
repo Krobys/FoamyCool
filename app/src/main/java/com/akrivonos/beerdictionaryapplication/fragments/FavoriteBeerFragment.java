@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
@@ -59,7 +59,6 @@ public class FavoriteBeerFragment extends Fragment implements FavoriteBeerViewPr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUpPresenter();
         setUpAdapterAndListeners();
     }
 
@@ -77,14 +76,15 @@ public class FavoriteBeerFragment extends Fragment implements FavoriteBeerViewPr
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_beer, container, false);
         setHasOptionsMenu(true);
+        setUpPresenter();
         setUpScreenAndValues(view);
         setUpActionBar();
         return view;
     }
 
     private void setUpPresenter(){
-        BeerModel beerModel = BeerModel.getInstance(getContext());
-        favoriteBeerPresenter = new FavoriteBeerPresenter(beerModel, this);
+        BeerModelData beerModelData = BeerModelData.getInstance(getContext());
+        favoriteBeerPresenter = new FavoriteBeerPresenter(beerModelData, this);
     }
 
     private void setUpScreenAndValues(View view) {

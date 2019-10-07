@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BreweryAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
@@ -52,7 +52,6 @@ public class SearchGeoBreweryFragment extends Fragment implements BreweryViewLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUpPresenter();
         setUpAdapterAndListeners();
     }
 
@@ -71,14 +70,15 @@ public class SearchGeoBreweryFragment extends Fragment implements BreweryViewLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_geo_brewery, container, false);
         setHasOptionsMenu(true);
+        setUpPresenter();
         setUpScreenAndValues(view);
         startLoadingInformation();
         return view;
     }
 
     private void setUpPresenter(){
-        BeerModel beerModel = BeerModel.getInstance(getContext());
-        presenterListener = new BreweryPresenter(beerModel, this);
+        BeerModelData beerModelData = BeerModelData.getInstance(getContext());
+        presenterListener = new BreweryPresenter(beerModelData, this);
     }
 
     private void setUpScreenAndValues(View view) {

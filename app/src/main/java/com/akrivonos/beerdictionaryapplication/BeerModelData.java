@@ -18,22 +18,22 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.akrivonos.beerdictionaryapplication.fragments.SearchBeerNameFragment.TYPE_BEER;
 
-public class BeerModel {
+public class BeerModelData {
 
     private final RoomAppDatabase roomAppDatabase;
     private final RetrofitSearchBeer retrofitSearchBeer;
-    private static BeerModel beerModel;
+    private static BeerModelData beerModelData;
 
-    public static BeerModel getInstance(Context context){
-        if(beerModel == null){
-            beerModel = new BeerModel(context);
-        }
-        return beerModel;
-    }
-
-    private BeerModel(Context context){
+    private BeerModelData(Context context) {
         roomAppDatabase = RoomAppDatabase.getDatabase(context);
         retrofitSearchBeer = RetrofitSearchBeer.getInstance();
+    }
+
+    public static BeerModelData getInstance(Context context) {
+        if (beerModelData == null) {
+            beerModelData = new BeerModelData(context);
+        }
+        return beerModelData;
     }
 
     public void loadBeerListRetrofit(String searchText){
@@ -73,6 +73,12 @@ public class BeerModel {
                 .subscribe();
     }
 
+    public Disposable setListenerChangeFavoriteStatusBeer(io.reactivex.functions.Consumer<List<BeerDetailedDescription>> consumer, String uniqueIdBeer) {
+        return roomAppDatabase.favoriteBeerDao().checkIsBeerFavorite(uniqueIdBeer)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
     public Disposable loadFavoriteBeerListDatabase(io.reactivex.functions.Consumer<List<BeerDetailedDescription>> consumer){
         return roomAppDatabase.favoriteBeerDao().getFavoritesBeer()
                 .subscribeOn(Schedulers.io())

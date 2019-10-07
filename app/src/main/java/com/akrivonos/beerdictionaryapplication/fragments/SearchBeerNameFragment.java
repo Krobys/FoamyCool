@@ -23,15 +23,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
-import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.BeerViewListener;
-import com.akrivonos.beerdictionaryapplication.presenters.BeerPresenter;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.BottomNavigationHideListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveToDetailsBeerListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.BeerPresenterListener;
+import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.BeerViewListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
+import com.akrivonos.beerdictionaryapplication.presenters.BeerPresenter;
 import com.akrivonos.beerdictionaryapplication.utils.InternetUtils;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding3.widget.RxSearchView;
@@ -64,7 +64,6 @@ public class SearchBeerNameFragment extends Fragment implements BeerViewListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUpPresenter();
         setUpAdapterAndListeners();
     }
 
@@ -82,13 +81,14 @@ public class SearchBeerNameFragment extends Fragment implements BeerViewListener
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_beer_name, container, false);
         setHasOptionsMenu(true);
+        setUpPresenter();
         setUpScreenAndValues(view);
         return view;
     }
 
     private void setUpPresenter(){
-        BeerModel beerModel = BeerModel.getInstance(getContext());
-        beerPresenterListener = new BeerPresenter(beerModel, this);
+        BeerModelData beerModelData = BeerModelData.getInstance(getContext());
+        beerPresenterListener = new BeerPresenter(beerModelData, this);
     }
 
     @Override

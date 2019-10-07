@@ -2,7 +2,7 @@ package com.akrivonos.beerdictionaryapplication.presenters;
 
 import android.view.View;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.BreweriesPresenterListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.BreweryViewListener;
 import com.akrivonos.beerdictionaryapplication.models.BreweryDetailedDescription;
@@ -14,12 +14,12 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class BreweryPresenter implements BreweriesPresenterListener {
-    private final BeerModel beerModel;
+    private final BeerModelData beerModelData;
     private Disposable observerDisposable;
     private BreweryViewListener viewPresenterListener;
 
-    public BreweryPresenter(BeerModel beerModel, BreweryViewListener breweryViewListener) {
-        this.beerModel = beerModel;
+    public BreweryPresenter(BeerModelData beerModelData, BreweryViewListener breweryViewListener) {
+        this.beerModelData = beerModelData;
         Observer<ArrayList<BreweryDetailedDescription>> observerBrewery = new Observer<ArrayList<BreweryDetailedDescription>>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -47,14 +47,14 @@ public class BreweryPresenter implements BreweriesPresenterListener {
 
             }
         };
-        beerModel.setBreweryObserverRetrofit(observerBrewery);
+        beerModelData.setBreweryObserverRetrofit(observerBrewery);
         this.viewPresenterListener = breweryViewListener;
     }
 
     @Override
     public void loadBreweryList(LatLng latLng) {
         viewPresenterListener.setVisibilityProgressBar(View.VISIBLE);
-        beerModel.loadBreweryListRetrofit(latLng);
+        beerModelData.loadBreweryListRetrofit(latLng);
     }
 
     @Override

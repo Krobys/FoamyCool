@@ -2,7 +2,7 @@ package com.akrivonos.beerdictionaryapplication.presenters;
 
 import android.view.View;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.FavoriteBeerPresenterListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.FavoriteBeerViewPresenterListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
@@ -14,7 +14,7 @@ import io.reactivex.functions.Consumer;
 
 public class FavoriteBeerPresenter implements FavoriteBeerPresenterListener {
     private Disposable disposableBeer;
-    private final BeerModel beerModel;
+    private final BeerModelData beerModelData;
     private final FavoriteBeerViewPresenterListener viewPresenterListener;
 
     private final Consumer<List<BeerDetailedDescription>> consumer = new Consumer<List<BeerDetailedDescription>>() {
@@ -31,8 +31,8 @@ public class FavoriteBeerPresenter implements FavoriteBeerPresenterListener {
         }
     };
 
-    public FavoriteBeerPresenter(BeerModel beerModel, FavoriteBeerViewPresenterListener favoriteBeerViewPresenterListener) {
-        this.beerModel = beerModel;
+    public FavoriteBeerPresenter(BeerModelData beerModelData, FavoriteBeerViewPresenterListener favoriteBeerViewPresenterListener) {
+        this.beerModelData = beerModelData;
         this.viewPresenterListener = favoriteBeerViewPresenterListener;
     }
 
@@ -43,12 +43,12 @@ public class FavoriteBeerPresenter implements FavoriteBeerPresenterListener {
 
     @Override
     public void setBeerNotFavorite(String beerId) {
-       beerModel.setBeerNotFavoriteDatabase(beerId);
+        beerModelData.setBeerNotFavoriteDatabase(beerId);
     }
 
     @Override
     public void loadFavoriteBeerList(){
-        disposableBeer = beerModel.loadFavoriteBeerListDatabase(consumer);
+        disposableBeer = beerModelData.loadFavoriteBeerListDatabase(consumer);
     }
 
 }

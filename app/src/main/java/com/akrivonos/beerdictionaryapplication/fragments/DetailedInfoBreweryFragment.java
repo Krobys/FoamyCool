@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.R;
 import com.akrivonos.beerdictionaryapplication.adapters.BeerNameAdapter;
 import com.akrivonos.beerdictionaryapplication.interfaces.MoveBackListener;
@@ -52,7 +52,6 @@ public class DetailedInfoBreweryFragment extends Fragment implements DetailedBre
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUpPresenter();
         startLoadBreweryBeerListData();
         setUpAdapterAndListeners();
     }
@@ -82,14 +81,15 @@ public class DetailedInfoBreweryFragment extends Fragment implements DetailedBre
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detailed_info_brewery, container, false);
         setHasOptionsMenu(true);
+        setUpPresenter();
         setUpScreenAndValues(view);
         setUpBreweryInformation();
         return view;
     }
 
     private void setUpPresenter(){
-        BeerModel beerModel = BeerModel.getInstance(getContext());
-        presenterListener = new DetailedInfoBreweryPresenter(beerModel, this);
+        BeerModelData beerModelData = BeerModelData.getInstance(getContext());
+        presenterListener = new DetailedInfoBreweryPresenter(beerModelData, this);
     }
 
     private void setUpScreenAndValues(View view) {

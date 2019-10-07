@@ -2,7 +2,7 @@ package com.akrivonos.beerdictionaryapplication.presenters;
 
 import android.view.View;
 
-import com.akrivonos.beerdictionaryapplication.BeerModel;
+import com.akrivonos.beerdictionaryapplication.BeerModelData;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.presenter_listeners.DetailedBreweryPresenterListener;
 import com.akrivonos.beerdictionaryapplication.interfaces.mvp_listeners.view_control_listeners.DetailedBreweryViewListener;
 import com.akrivonos.beerdictionaryapplication.models.BeerDetailedDescription;
@@ -14,7 +14,7 @@ import io.reactivex.disposables.Disposable;
 
 public class DetailedInfoBreweryPresenter implements DetailedBreweryPresenterListener {
     private Disposable disposableBeer;
-    private final BeerModel beerModel;
+    private final BeerModelData beerModelData;
     private final DetailedBreweryViewListener viewPresenterListener;
 
     private final Observer<ArrayList<BeerDetailedDescription>> observerBeer = new Observer<ArrayList<BeerDetailedDescription>>() { // observer for retrofit
@@ -43,9 +43,9 @@ public class DetailedInfoBreweryPresenter implements DetailedBreweryPresenterLis
         }
     };
 
-    public DetailedInfoBreweryPresenter(BeerModel beerModel, DetailedBreweryViewListener detailedBreweryViewListener) {
-        this.beerModel = beerModel;
-        beerModel.setBeerObserverRetrofit(observerBeer);
+    public DetailedInfoBreweryPresenter(BeerModelData beerModelData, DetailedBreweryViewListener detailedBreweryViewListener) {
+        this.beerModelData = beerModelData;
+        beerModelData.setBeerObserverRetrofit(observerBeer);
         this.viewPresenterListener = detailedBreweryViewListener;
     }
 
@@ -56,7 +56,7 @@ public class DetailedInfoBreweryPresenter implements DetailedBreweryPresenterLis
 
     @Override
     public void loadBeerInBreweryList(String idBrewery) {
-        beerModel.loadBeersInBreweryRetrofit(idBrewery);
+        beerModelData.loadBeersInBreweryRetrofit(idBrewery);
     }
 
 }
