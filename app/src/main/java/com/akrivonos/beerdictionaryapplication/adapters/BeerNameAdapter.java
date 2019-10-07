@@ -97,7 +97,8 @@ public class BeerNameAdapter extends RecyclerView.Adapter<BeerNameAdapter.BeerTy
         BeerDetailedDescription detailsBeer = beerTypesList.get(position);
         holder.beerDetailedDescription = detailsBeer;
         holder.nameBeerTextView.setText(detailsBeer.getNameBeer());
-        if (!TextUtils.isEmpty(detailsBeer.getIconSmallUrl()))
+        String urlIcon = detailsBeer.getIconSmallUrl();
+        if (!TextUtils.isEmpty(urlIcon))
             Glide.with(holder.iconBeerImageView)
                     .load(detailsBeer.getIconSmallUrl())
                     .into(holder.iconBeerImageView);

@@ -1,6 +1,7 @@
 package com.akrivonos.beerdictionaryapplication.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,8 @@ public class BreweryAdapter extends RecyclerView.Adapter<BreweryAdapter.BreweryV
         BreweryDetailedDescription breweryDetailedDescription = breweryList.get(position);
         holder.breweryDetailedDescription = breweryDetailedDescription;
         holder.nameBrewery.setText(breweryDetailedDescription.getNameBrewery());
-        if (breweryDetailedDescription.getIconSmallUrl() != null) {
+        String urlIcon = breweryDetailedDescription.getIconSmallUrl();
+        if (!TextUtils.isEmpty(urlIcon)) {
             Glide.with(holder.imageBrewery)
                     .load(breweryDetailedDescription.getIconSmallUrl())
                     .into(holder.imageBrewery);

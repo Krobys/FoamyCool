@@ -3,6 +3,7 @@ package com.akrivonos.beerdictionaryapplication.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -145,7 +146,8 @@ public class DetailedInfoBreweryFragment extends Fragment {
         if (bundle != null) {
             BreweryDetailedDescription breweryDetailedDescription = bundle.getParcelable(DETAILED_INFO_BREWERY);
             if (breweryDetailedDescription != null) {
-                if (breweryDetailedDescription.getIconBigUrl() != null) {
+                String urlIcon = breweryDetailedDescription.getIconBigUrl();
+                if (!TextUtils.isEmpty(urlIcon)) {
                     Glide.with(imageBrewery)
                             .load(breweryDetailedDescription.getIconBigUrl())
                             .into(imageBrewery);
