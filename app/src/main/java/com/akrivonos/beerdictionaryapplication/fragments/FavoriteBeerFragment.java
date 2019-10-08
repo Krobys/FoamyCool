@@ -35,6 +35,7 @@ public class FavoriteBeerFragment extends Fragment {
     private BeerNameAdapter beerNameAdapterFavorites;
     private RoomAppDatabase appDatabase;
     private Disposable favoritesBeerDisposable;
+    private RecyclerView recyclerViewFavorite;
     private ConstraintLayout emptyMessage;
     private final ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
@@ -86,7 +87,7 @@ public class FavoriteBeerFragment extends Fragment {
     }
 
     private void setUpScreenAndValues(View view) {
-        RecyclerView recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
+        recyclerViewFavorite = view.findViewById(R.id.recycler_favorite_beer);
         emptyMessage = view.findViewById(R.id.empty_data_message);
         recyclerViewFavorite.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewFavorite.setAdapter(beerNameAdapterFavorites);
@@ -101,8 +102,10 @@ public class FavoriteBeerFragment extends Fragment {
                     if (favoritesBeerList.size() > 0) {
                         beerNameAdapterFavorites.setData(favoritesBeerList);
                         beerNameAdapterFavorites.notifyDataSetChanged();
+                        recyclerViewFavorite.setVisibility(View.VISIBLE);
                         emptyMessage.setVisibility(View.GONE);
                     } else {
+                        recyclerViewFavorite.setVisibility(View.GONE);
                         emptyMessage.setVisibility(View.VISIBLE);
                     }
 
